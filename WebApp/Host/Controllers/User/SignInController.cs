@@ -5,6 +5,7 @@ using WebApp.Host.Services.UserService.Models;
 
 namespace WebApp.Host.Controllers.User
 {
+    [Route("api/[controller]")]
     public class SignInController : Controller
     {
         private readonly IUserService _userService;

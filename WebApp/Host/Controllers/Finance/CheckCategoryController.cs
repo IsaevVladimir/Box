@@ -6,6 +6,7 @@ using WebApp.Host.Services.FinanceService.Models;
 
 namespace WebApp.Host.Controllers.Finance
 {
+    [Route("api/[controller]")]
     public class CheckCategoryController : Controller
     {
         private readonly IFinanceService _financeService;

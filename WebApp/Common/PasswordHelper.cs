@@ -13,6 +13,5 @@ namespace WebApp.Common
         {
             return BCrypt.Net.BCrypt.Verify(value, hash);
         }
-
     }
 }
