@@ -1,8 +1,9 @@
-﻿using Microsoft.AspNetCore.Mvc;
-using WebApp.Services.UserService;
-using WebApp.Services.UserService.Models;
+﻿using System.Threading.Tasks;
+using Microsoft.AspNetCore.Mvc;
+using WebApp.Host.Services.UserService;
+using WebApp.Host.Services.UserService.Models;
 
-namespace WebApp.Controllers.User
+namespace WebApp.Host.Controllers.User
 {
     public class SignUpController : Controller
     {
@@ -13,9 +14,9 @@ namespace WebApp.Controllers.User
         }
         
         [HttpPost]
-        public ActionResult<UserDto> Post(RegistrationDto data)
+        public async Task<ActionResult<UserDto>> Post(RegistrationDto data)
         {
-            var registeredUser = _userService.SignUp(data);
+            var registeredUser = await _userService.SignUp(data);
             if (registeredUser is null)
                 return new BadRequestResult();
 

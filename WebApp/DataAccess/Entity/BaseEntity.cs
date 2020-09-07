@@ -1,4 +1,4 @@
-﻿namespace DataAccess.Entity
+﻿namespace WebApp.DataAccess.Entity
 {
     public class BaseEntity
     {

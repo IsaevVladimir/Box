@@ -1,11 +1,11 @@
 ﻿using System.Collections.Generic;
 using System.Linq;
 using System.Threading.Tasks;
-using DataAccess.DataModels;
-using DataAccess.Entity;
 using Microsoft.EntityFrameworkCore;
+using WebApp.DataAccess.DataModels;
+using WebApp.DataAccess.Entity;
 
-namespace DataAccess.Components
+namespace WebApp.DataAccess.Repositories.Base
 {
     public abstract class CrudRepository<TEntity, TDataModel, TContext> : IRepository<TEntity, TDataModel>
         where TEntity : BaseEntity

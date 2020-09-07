@@ -1,6 +1,4 @@
 using System.Linq;
-using DataAccess.Components;
-using DataAccess.Repositories;
 using Microsoft.AspNetCore.Builder;
 using Microsoft.AspNetCore.Hosting;
 using Microsoft.AspNetCore.SpaServices.ReactDevelopmentServer;
@@ -8,10 +6,13 @@ using Microsoft.EntityFrameworkCore;
 using Microsoft.Extensions.Configuration;
 using Microsoft.Extensions.DependencyInjection;
 using Microsoft.Extensions.Hosting;
-using WebApp.Services.FinanceService.Implementations;
-using WebApp.Services.UserService;
+using WebApp.DataAccess;
+using WebApp.DataAccess.Repositories;
+using WebApp.Host.Services.FinanceService;
+using WebApp.Host.Services.FinanceService.Implementations;
+using WebApp.Host.Services.UserService;
 
-namespace WebApp
+namespace WebApp.Host
 {
     public class Startup
     {
@@ -33,8 +34,8 @@ namespace WebApp
             services.AddScoped<CheckRepository>();
             services.AddScoped<CheckCategoryRepository>();
             
-            services.AddScoped<UserService>();
-            services.AddScoped<FinanceService>();
+            services.AddScoped<IUserService, UserService>();
+            services.AddScoped<IFinanceService, FinanceService>();
         }
 
         public void Configure(IApplicationBuilder app, IWebHostEnvironment env)

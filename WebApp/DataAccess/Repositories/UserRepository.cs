@@ -1,8 +1,8 @@
-﻿using DataAccess.Components;
-using DataAccess.DataModels;
-using DataAccess.Entity;
+﻿using WebApp.DataAccess.DataModels;
+using WebApp.DataAccess.Entity;
+using WebApp.DataAccess.Repositories.Base;
 
-namespace DataAccess.Repositories
+namespace WebApp.DataAccess.Repositories
 {
     public class UserRepository : CrudRepository<User, UserDm, CustomDbContext>
     {

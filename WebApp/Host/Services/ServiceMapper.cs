@@ -1,11 +1,11 @@
 ﻿using AutoMapper;
 using AutoMapper.Configuration;
-using Common;
-using DataAccess.DataModels;
-using WebApp.Services.FinanceService.Models;
-using WebApp.Services.UserService.Models;
+using WebApp.Common;
+using WebApp.DataAccess.DataModels;
+using WebApp.Host.Services.FinanceService.Models;
+using WebApp.Host.Services.UserService.Models;
 
-namespace WebApp.Services
+namespace WebApp.Host.Services
 {
     public class ServiceMapper
     {

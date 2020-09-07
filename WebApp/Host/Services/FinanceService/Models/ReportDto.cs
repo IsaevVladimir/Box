@@ -1,7 +1,7 @@
 ﻿using System;
 using System.Collections.Generic;
 
-namespace WebApp.Services.FinanceService.Models
+namespace WebApp.Host.Services.FinanceService.Models
 {
     public class ReportDto
     {

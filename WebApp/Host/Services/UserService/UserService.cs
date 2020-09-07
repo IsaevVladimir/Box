@@ -1,11 +1,12 @@
 ﻿using System;
 using System.Linq;
-using Common;
-using DataAccess.DataModels;
-using DataAccess.Repositories;
-using WebApp.Services.UserService.Models;
+using System.Threading.Tasks;
+using WebApp.Common;
+using WebApp.DataAccess.DataModels;
+using WebApp.DataAccess.Repositories;
+using WebApp.Host.Services.UserService.Models;
 
-namespace WebApp.Services.UserService
+namespace WebApp.Host.Services.UserService
 {
     public class UserService : IUserService
     {
@@ -15,9 +16,10 @@ namespace WebApp.Services.UserService
             _userRepository = userRepository;
         }
         
-        public UserDto SignIn(string login, string password)
+        public async Task<UserDto> SignIn(string login, string password)
         {
-            var foundedUser = _userRepository.GetAll().Result.FirstOrDefault(x =>
+            var allUsers = await _userRepository.GetAll();
+            var foundedUser = allUsers.FirstOrDefault(x =>
                 string.Equals(login, x.Login, StringComparison.OrdinalIgnoreCase)
                 && PasswordHelper.Verify(password, x.PasswordHash));
             
@@ -27,10 +29,10 @@ namespace WebApp.Services.UserService
             return ServiceMapper.Mapper.Map<UserDto>(foundedUser);
         }
         
-        public UserDto SignUp(RegistrationDto registrationDto)
+        public async Task<UserDto> SignUp(RegistrationDto registrationDto)
         {
             var userDm = ServiceMapper.Mapper.Map<UserDm>(registrationDto);
-            return ServiceMapper.Mapper.Map<UserDto>(_userRepository.Add(userDm));
+            return ServiceMapper.Mapper.Map<UserDto>(await _userRepository.Add(userDm));
         }
     }
 }

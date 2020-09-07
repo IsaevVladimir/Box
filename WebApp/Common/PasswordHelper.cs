@@ -1,6 +1,6 @@
 ﻿using BCrypt.Net;
 
-namespace Common
+namespace WebApp.Common
 {
     public class PasswordHelper
     {

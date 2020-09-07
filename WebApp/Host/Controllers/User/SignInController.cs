@@ -1,8 +1,9 @@
-﻿using Microsoft.AspNetCore.Mvc;
-using WebApp.Services.UserService;
-using WebApp.Services.UserService.Models;
+﻿using System.Threading.Tasks;
+using Microsoft.AspNetCore.Mvc;
+using WebApp.Host.Services.UserService;
+using WebApp.Host.Services.UserService.Models;
 
-namespace WebApp.Controllers.User
+namespace WebApp.Host.Controllers.User
 {
     public class SignInController : Controller
     {
@@ -13,9 +14,9 @@ namespace WebApp.Controllers.User
         }
         
         [HttpGet]
-        public ActionResult<UserDto> Get(string login, string password)
+        public async Task<ActionResult<UserDto>> Get(string login, string password)
         {
-            var authorizedUser = _userService.SignIn(login, password);
+            var authorizedUser = await _userService.SignIn(login, password);
             if (authorizedUser is null)
                 return new NotFoundResult();
 

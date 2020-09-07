@@ -1,9 +1,9 @@
 ﻿using System.Collections.Generic;
 using System.Threading.Tasks;
-using DataAccess.DataModels;
-using DataAccess.Entity;
+using WebApp.DataAccess.DataModels;
+using WebApp.DataAccess.Entity;
 
-namespace DataAccess.Components
+namespace WebApp.DataAccess.Repositories.Base
 {
     public interface IRepository<TEntity, TDataModel> 
         where TEntity : BaseEntity

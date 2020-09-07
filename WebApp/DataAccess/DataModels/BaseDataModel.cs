@@ -1,4 +1,4 @@
-﻿namespace DataAccess.DataModels
+﻿namespace WebApp.DataAccess.DataModels
 {
     public class BaseDataModel
     {

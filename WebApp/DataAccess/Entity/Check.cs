@@ -1,6 +1,6 @@
 ﻿using System;
 
-namespace DataAccess.Entity
+namespace WebApp.DataAccess.Entity
 {
     public class Check : BaseEntity
     {

@@ -1,4 +1,4 @@
-﻿namespace WebApp.Services.UserService.Models
+﻿namespace WebApp.Host.Services.UserService.Models
 {
     public class RegistrationDto
     {

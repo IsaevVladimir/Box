@@ -1,6 +1,4 @@
-﻿using Microsoft.AspNetCore.Mvc;
-
-namespace WebApp.Services.FinanceService.Models
+﻿namespace WebApp.Host.Services.FinanceService.Models
 {
     public class CheckCategoryDto
     {

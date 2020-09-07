@@ -1,6 +1,4 @@
-﻿using System.Collections.Generic;
-
-namespace DataAccess.DataModels
+﻿namespace WebApp.DataAccess.DataModels
 {
     public class UserDm : BaseDataModel
     {

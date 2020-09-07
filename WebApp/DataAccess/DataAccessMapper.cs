@@ -1,9 +1,9 @@
 ﻿using AutoMapper;
 using AutoMapper.Configuration;
-using DataAccess.DataModels;
-using DataAccess.Entity;
+using WebApp.DataAccess.DataModels;
+using WebApp.DataAccess.Entity;
 
-namespace DataAccess.Components
+namespace WebApp.DataAccess
 {
     public class DataAccessMapper
     {
