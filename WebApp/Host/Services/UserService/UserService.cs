@@ -32,7 +32,20 @@ namespace WebApp.Host.Services.UserService
         public async Task<UserDto> SignUp(RegistrationDto registrationDto)
         {
             var userDm = ServiceMapper.Mapper.Map<UserDm>(registrationDto);
-            return ServiceMapper.Mapper.Map<UserDto>(await _userRepository.Add(userDm));
+            var addedUser = await _userRepository.Add(userDm);
+            if (addedUser is null)
+                return null; 
+            
+            return ServiceMapper.Mapper.Map<UserDto>(addedUser);
+        }
+
+        public async Task<UserDto> GetById(int id)
+        {
+            var foundedUser = await _userRepository.Get(id);
+            if (foundedUser is null)
+                return null; 
+            
+            return ServiceMapper.Mapper.Map<UserDto>(foundedUser);
         }
     }
 }

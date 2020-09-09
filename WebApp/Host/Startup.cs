@@ -25,7 +25,7 @@ namespace WebApp.Host
         public void ConfigureServices(IServiceCollection services)
         {
             services.AddControllers();
-            services.AddSpaStaticFiles(configuration => { configuration.RootPath = "ClientApp/build"; });
+            services.AddSpaStaticFiles(configuration => { configuration.RootPath = "Client/build"; });
             
             services.AddDbContext<CustomDbContext>(options => 
                 options.UseNpgsql(_configuration.GetSection("DataBase:ConnectionString").Value));
@@ -56,7 +56,7 @@ namespace WebApp.Host
             {
                 endpoints.MapControllerRoute(
                     name: "default",
-                    pattern: "{controller}/{action=Index}/{id?}");
+                    pattern: "{controller}/{id?}");
             });
 
             app.UseSpa(spa =>

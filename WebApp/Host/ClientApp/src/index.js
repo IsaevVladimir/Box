@@ -1,18 +1,17 @@
-import 'bootstrap/dist/css/bootstrap.css';
-import React from 'react';
-import ReactDOM from 'react-dom';
-import { BrowserRouter } from 'react-router-dom';
-import App from './App';
-import registerServiceWorker from './registerServiceWorker';
+import dva from 'dva';
+import './index.less';
 
-const baseUrl = document.getElementsByTagName('base')[0].getAttribute('href');
-const rootElement = document.getElementById('root');
+// 1. Initialize
+const app = dva();
 
-ReactDOM.render(
-  <BrowserRouter basename={baseUrl}>
-    <App />
-  </BrowserRouter>,
-  rootElement);
+// 2. Plugins
+// app.use({});
 
-registerServiceWorker();
+// 3. Model
+// app.model(require('./models/example').default);
 
+// 4. Router
+app.router(require('./router').default);
+
+// 5. Start
+app.start('#root');

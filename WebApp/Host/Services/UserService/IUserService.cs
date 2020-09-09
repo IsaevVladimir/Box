@@ -7,5 +7,7 @@ namespace WebApp.Host.Services.UserService
     {
         public Task<UserDto> SignIn(string login, string password);
         public Task<UserDto> SignUp(RegistrationDto registrationDto);
+        
+        public Task<UserDto> GetById(int id);
     }
 }
