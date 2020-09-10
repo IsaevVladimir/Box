@@ -22,8 +22,14 @@
     <ItemGroup>
         <!-- Don't publish the SPA source files, but do show them in the project files list -->
         <Content Remove="$(SpaRoot)**" />
+        <Content Include="ClientApp\package-lock.json" />
+        <Content Include="ClientApp\package.json" />
         <None Remove="$(SpaRoot)**" />
         <None Include="$(SpaRoot)**" Exclude="$(SpaRoot)node_modules\**" />
+        <None Remove="ClientApp\src\assets\**" />
+        <Content Remove="ClientApp\src\assets\**" />
+        <None Remove="ClientApp\src\components\SignUp\**" />
+        <Content Remove="ClientApp\src\components\SignUp\**" />
     </ItemGroup>
 
     <ItemGroup>
@@ -31,8 +37,13 @@
     </ItemGroup>
 
     <ItemGroup>
-      <Folder Include="ClientApp\src\assets" />
-      <Folder Include="ClientApp\src\components\SignUp" />
+      <Compile Remove="ClientApp\src\assets\**" />
+      <Compile Remove="ClientApp\src\components\SignUp\**" />
+    </ItemGroup>
+
+    <ItemGroup>
+      <EmbeddedResource Remove="ClientApp\src\assets\**" />
+      <EmbeddedResource Remove="ClientApp\src\components\SignUp\**" />
     </ItemGroup>
 
     <Target Name="DebugEnsureNodeEnv" BeforeTargets="Build" Condition=" '$(Configuration)' == 'Debug' And !Exists('$(SpaRoot)node_modules') ">

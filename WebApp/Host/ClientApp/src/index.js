@@ -1,17 +1,36 @@
+import 'babel-polyfill';
 import dva from 'dva';
+// import Loading from 'dva-loading';
+import {
+  message
+} from 'antd';
+
 import './index.less';
 
 // 1. Initialize
-const app = dva();
+const app = dva({
+  onError(err, dispatch) {
+    if (err.resp) {
+      message.error(err.resp.msg);
+    } else if (err.srv) {
+      message.error(err.srv.msg);
+    } else {
+      message.error(err);
+    }
+  }
+});
 
 // 2. Plugins
-// app.use({});
+// app.use(Loading({
+//   namespace: 'loading'
+//   // effects: enable effects level loading state
+// }));
 
 // 3. Model
-// app.model(require('./models/example').default);
+// Moved to router.js
 
 // 4. Router
-app.router(require('./router').default);
+app.router(require('./router.jsx'));
 
 // 5. Start
 app.start('#root');
