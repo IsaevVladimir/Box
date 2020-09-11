@@ -9,9 +9,7 @@ import Footer from './footer.jsx';
 
 import styles from './main.less';
 
-function Main({
-  children, location
-}) {
+function Main({ children, location }) {
   return (
     <Layout className={styles.normal}>
       <Layout.Header className={styles.header}>

@@ -24,6 +24,7 @@
         <Content Remove="$(SpaRoot)**" />
         <Content Include="ClientApp\package-lock.json" />
         <Content Include="ClientApp\package.json" />
+        <Content Include="ClientApp\src\components\Filter\LeftFilter\Wrapper.less" />
         <None Remove="$(SpaRoot)**" />
         <None Include="$(SpaRoot)**" Exclude="$(SpaRoot)node_modules\**" />
         <None Remove="ClientApp\src\assets\**" />

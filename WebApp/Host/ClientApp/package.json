@@ -18,8 +18,8 @@
     "prop-types": "^15.6.1",
     "qs": "^6.5.1",
     "query-string": "^5.1.0",
-    "react": "^16.2.0",
-    "react-dom": "^16.2.0"
+    "react": "^16.8.4",
+    "react-dom": "^16.8.4"
   },
   "devDependencies": {
     "babel-eslint": "^8.2.2",

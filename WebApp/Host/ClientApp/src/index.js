@@ -5,6 +5,8 @@ import {
   message
 } from 'antd';
 
+import user from './models/user'
+
 import './index.less';
 
 // 1. Initialize
@@ -27,7 +29,7 @@ const app = dva({
 // }));
 
 // 3. Model
-// Moved to router.js
+app.model(user);
 
 // 4. Router
 app.router(require('./router.jsx'));

@@ -1,0 +1,38 @@
+﻿.outerContainer {
+  display: flex;
+  align-items: center;
+  justify-content: center;
+
+  height: 100%;
+
+  .form {
+    display: flex;
+    flex-direction: column;
+    justify-content: center;
+
+    padding: 20px 50px;
+    background-color: lightblue;
+    border-radius: 8px;
+
+    .signUpColumn {
+      padding-left: 10px;
+    }
+
+    .submitButtonItem {
+      width: 50%;
+
+      :global(.ant-btn) {
+        width: 100%;
+      }
+    }
+
+    .switcher {
+      width: 49%;
+    }
+
+    :global(.ant-form-item-label) {
+      display: flex;
+      justify-content: center;
+    }
+  }
+}
