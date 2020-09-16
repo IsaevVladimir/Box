@@ -1,19 +1,29 @@
-﻿import React, { useState, cloneElement } from 'react';
-import { Switch } from 'antd';
+﻿import React, { useState, useRef, cloneElement } from 'react';
+import { Form, Switch } from 'antd';
+import isArray from 'lodash/isArray';
 
 import styles from './Wrapper.less'
 
-const Wrapper = ({ children }) => {
+const Wrapper = Form.create({
+  name: 'formWrapper', // onValuesChange
+})(({ children, form }) => {
   const [isCollapsed, setIsCollapsed] = useState(false);
 
-  const clonedChildren = children.map(x => cloneElement(x, { isCollapsed }))
+  const normalizeChildren = () => {
+    if (isArray(children))
+      return children.map(x => cloneElement(x, { isCollapsed, form }))
+    return cloneElement(children, { isCollapsed, form });
+  }
 
   return (
     <div className={isCollapsed ? styles.collapsedContainer : styles.container}>
-      <Switch onChange={() => setIsCollapsed(!isCollapsed)} />
-      {clonedChildren}
+      {/* todo: ft collapsed filter
+      /* <Switch onChange={() => setIsCollapsed(!isCollapsed)} /> */}
+      <Form>
+        {normalizeChildren()}
+      </Form>
     </div>
   );
-}
+});
 
 export default Wrapper;

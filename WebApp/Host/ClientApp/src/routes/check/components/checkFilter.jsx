@@ -7,13 +7,11 @@ import DateRangeItem from "../../../components/Filter/LeftFilter/Items/DateRange
 import PriceItem from "../../../components/Filter/LeftFilter/Items/PriceItem";
 
 const CheckFilter = () => {
-  const isCollapsed = false;
-
   return (
     <FilterWrapper>
-      <CategoryItem isCollapsed={isCollapsed} />
-      <DateRangeItem isCollapsed={isCollapsed} />
-      <PriceItem isCollapsed={isCollapsed} />
+      <CategoryItem />
+      <DateRangeItem />
+      <PriceItem />
     </FilterWrapper>
   );
 }

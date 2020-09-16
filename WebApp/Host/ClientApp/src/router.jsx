@@ -1,7 +1,7 @@
 import React from 'react';
 import PropTypes from 'prop-types';
 import {
-  Router, Switch, Route
+  Router, Switch, Route, Redirect
 } from 'dva/router';
 import Dynamic from 'dva/dynamic';
 
@@ -18,7 +18,8 @@ function RouterConfig({
   return (
     <Router history={history}>
       <Switch>
-        <Route exact path="/" component={Index} />
+        <Redirect exact from="/" to="/Check" />
+        <Route exact path="/Check" component={Index} />
       </Switch>
     </Router>
   );

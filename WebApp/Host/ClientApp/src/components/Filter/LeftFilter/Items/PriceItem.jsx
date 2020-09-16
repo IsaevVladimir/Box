@@ -1,26 +1,23 @@
-﻿import React, { useState } from 'react'
-import { Slider, Icon } from 'antd';
+﻿import React from 'react'
+import { Slider } from 'antd';
 
 import ItemWrapper from './ItemWrapper';
 import styles from './ItemWrapper.less'
 
-const PriceItem = ({ isCollapsed = false }) => {
-  const [selectedPrice, setSelectedPrice] = useState([0, 100])
-
-  const itemContent = () => {
-    return (
-      <div>
-        <span>Price range: {selectedPrice.join(' - ')}</span>
-        <Slider range value={selectedPrice} onChange={(v) => setSelectedPrice(v)} className={styles.rangePicker} />
-      </div>
-    );
-  }
-
-  const minimalItemContent = () => {
-    return <Icon type="pay-circle" />;
-  }
-
-  return <ItemWrapper isCollapsed={isCollapsed} renderItemContent={itemContent} renderMinimalItemContent={minimalItemContent} />
+const PriceItem = ({ value, isCollapsed, form }) => {
+  return (
+    <ItemWrapper
+      isCollapsed={isCollapsed}
+      form={form}
+      iconType='pay-circle'
+      initialValue={[0, 100]}
+      fieldName='price'
+      valuePropName='value'
+      label='Price range:'
+    >
+      <Slider value={value} range className={styles.rangePicker} />
+    </ItemWrapper>
+  );
 };
 
 export default PriceItem;

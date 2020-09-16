@@ -6,6 +6,9 @@ import {
 } from 'antd';
 
 import user from './models/user'
+import check from './models/check'
+import checkCategory from './models/checkCategory'
+import setting from './models/setting'
 
 import './index.less';
 
@@ -30,6 +33,9 @@ const app = dva({
 
 // 3. Model
 app.model(user);
+app.model(check);
+app.model(checkCategory);
+app.model(setting);
 
 // 4. Router
 app.router(require('./router.jsx'));

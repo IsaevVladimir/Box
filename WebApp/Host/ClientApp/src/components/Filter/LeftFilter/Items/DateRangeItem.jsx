@@ -1,27 +1,27 @@
 ﻿import React from 'react';
-import {DatePicker, Icon} from 'antd';
+import { DatePicker } from 'antd';
+import moment from 'moment'
 
 import ItemWrapper from './ItemWrapper';
 import styles from './ItemWrapper.less';
 
-const {  RangePicker } = DatePicker;
+const { RangePicker } = DatePicker;
 
-const DateRangeItem = ({ isCollapsed = false }) => {
+const DateRangeItem = ({ isCollapsed, form }) => {
 
-  const itemContent = () => {
-    return (
-      <div>
-        <span>Date range:</span>
-        <RangePicker className={styles.dateRangePicker} onChange={() => {}} />
-      </div>
-    );
-  }
-
-  const minimalItemContent = () => {
-    return <Icon type="bars" />;
-  }
-
-  return <ItemWrapper isCollapsed={isCollapsed} renderItemContent={itemContent} renderMinimalItemContent={minimalItemContent} />
+  return (
+    <ItemWrapper
+      isCollapsed={isCollapsed}
+      form={form}
+      iconType='bars'
+      initialValue={[moment(), moment()]}
+      fieldName='dateRange'
+      valuePropName='value'
+      label='Date range:'
+    >
+      <RangePicker className={styles.dateRangePicker} />
+    </ItemWrapper>
+  );
 }
 
 export default DateRangeItem;

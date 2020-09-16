@@ -1,31 +1,14 @@
 ﻿import React from 'react';
-import { Tree, Icon } from 'antd';
+import { connect } from 'dva';
+import {Tree} from 'antd';
 
 import ItemWrapper from './ItemWrapper';
 
-const { TreeNode } = Tree;
+const {TreeNode} = Tree;
 import {listToTree} from '../../../../utils/tree';
 
-const categories = [
-  {
-    Id: 1,
-    Name: 'Category 1',
-    ParentId: null
-  },
-  {
-    Id: 2,
-    Name: 'Category 2',
-    ParentId: 1
-  },
-  {
-    Id: 3,
-    Name: 'Category 1',
-    ParentId: 2
-  }
-];
-
-const CategoryItem = ({ isCollapsed = false }) => {
-  const treeData = listToTree(categories)
+const CategoryItem = ({isCollapsed, form, list}) => {
+  const treeData = listToTree(list)
 
   const renderTreeNodes = data => {
     return data.map(item => {
@@ -40,24 +23,25 @@ const CategoryItem = ({ isCollapsed = false }) => {
     });
   };
 
-  const itemContent = () => {
-    return (
-      <div>
-        <span>Check categories:</span>
-        <Tree
-          checkable
-        >
-          {renderTreeNodes(treeData)}
-        </Tree>
-      </div>
-    );
-  }
-
-  const minimalItemContent = () => {
-    return <Icon type="calendar" />;
-  }
-
-  return <ItemWrapper isCollapsed={isCollapsed} renderItemContent={itemContent} renderMinimalItemContent={minimalItemContent} />
+  return (
+    <ItemWrapper
+      isCollapsed={isCollapsed}
+      form={form}
+      iconType='calendar'
+      initialValue={0}
+      fieldName='categoryId'
+      valuePropName='value'
+      label='Check categories:'
+    >
+      <Tree
+        checkable
+      >
+        {renderTreeNodes(treeData)}
+      </Tree>
+    </ItemWrapper>
+  );
 }
 
-export default CategoryItem;
+export default connect(({ checkCategory }) => ({
+  list: checkCategory.list
+}))(CategoryItem);
