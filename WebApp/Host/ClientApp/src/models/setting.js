@@ -7,7 +7,7 @@ export default {
 
   state: {
     priceRange: {
-      max: 100,
+      max: 300,
       min: 0
     },
     dateRange: {

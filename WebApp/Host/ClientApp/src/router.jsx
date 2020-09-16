@@ -8,18 +8,18 @@ import Dynamic from 'dva/dynamic';
 function RouterConfig({
   history, app
 }) {
-  const Index = Dynamic({
+  const Check = Dynamic({
     app,
     // models: () => [
     //   import('./models/index')
     // ],
-    component: () => import('./routes/index')
+    component: () => import('./pages/check/index')
   });
   return (
     <Router history={history}>
       <Switch>
         <Redirect exact from="/" to="/Check" />
-        <Route exact path="/Check" component={Index} />
+        <Route exact path="/Check" component={Check} />
       </Switch>
     </Router>
   );

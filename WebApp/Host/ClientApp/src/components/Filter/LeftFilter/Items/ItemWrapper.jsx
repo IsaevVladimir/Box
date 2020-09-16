@@ -2,14 +2,15 @@
 import { withRouter } from 'react-router';
 import {Form, Icon, Tooltip} from 'antd';
 
+import { updateHistory } from '../../../../utils/router'
 import styles from './ItemWrapper.less'
 
-const ItemWrapper = ({ history, isCollapsed, iconType, label, children, form, initialValue, fieldName, valuePropName = 'value'}) => {
+const ItemWrapper = ({ history, location, isCollapsed, iconType, label, children, form, initialValue, fieldName, valuePropName = 'value'}) => {
 
   const { getFieldDecorator } = form;
 
   const onChange = (e) => {
-    history.push({ pathname: '/Check', search: `?${fieldName}=${e}` });
+    updateHistory(history, location, '/Check', fieldName, e);
   }
 
   return (

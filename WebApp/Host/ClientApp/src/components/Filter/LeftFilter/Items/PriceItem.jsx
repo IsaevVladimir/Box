@@ -1,10 +1,11 @@
 ﻿import React from 'react'
+import { connect } from 'dva';
 import { Slider } from 'antd';
 
 import ItemWrapper from './ItemWrapper';
 import styles from './ItemWrapper.less'
 
-const PriceItem = ({ value, isCollapsed, form }) => {
+const PriceItem = ({ maxValue, minValue, value, isCollapsed, form }) => {
   return (
     <ItemWrapper
       isCollapsed={isCollapsed}
@@ -15,9 +16,12 @@ const PriceItem = ({ value, isCollapsed, form }) => {
       valuePropName='value'
       label='Price range:'
     >
-      <Slider value={value} range className={styles.rangePicker} />
+      <Slider value={value} range max={maxValue} min={minValue} className={styles.rangePicker} />
     </ItemWrapper>
   );
 };
 
-export default PriceItem;
+export default connect(({ setting }) => ({
+  maxValue: setting.priceRange.max,
+  minValue: setting.priceRange.min
+}))(PriceItem);

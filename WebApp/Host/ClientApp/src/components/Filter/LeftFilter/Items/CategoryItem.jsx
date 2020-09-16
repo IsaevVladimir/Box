@@ -1,10 +1,10 @@
 ﻿import React from 'react';
 import { connect } from 'dva';
-import {Tree} from 'antd';
+import {TreeSelect} from 'antd';
 
 import ItemWrapper from './ItemWrapper';
 
-const {TreeNode} = Tree;
+const {TreeNode} = TreeSelect;
 import {listToTree} from '../../../../utils/tree';
 
 const CategoryItem = ({isCollapsed, form, list}) => {
@@ -14,7 +14,7 @@ const CategoryItem = ({isCollapsed, form, list}) => {
     return data.map(item => {
       if (item.children) {
         return (
-          <TreeNode title={item.Name} key={item.Id} dataRef={item}>
+          <TreeNode title={item.Name} key={item.Id} value={item.Id}>
             {renderTreeNodes(item.children)}
           </TreeNode>
         );
@@ -33,11 +33,12 @@ const CategoryItem = ({isCollapsed, form, list}) => {
       valuePropName='value'
       label='Check categories:'
     >
-      <Tree
-        checkable
+      <TreeSelect
+        treeCheckable
+        showCheckedStrategy={TreeSelect.SHOW_PARENT}
       >
         {renderTreeNodes(treeData)}
-      </Tree>
+      </TreeSelect>
     </ItemWrapper>
   );
 }

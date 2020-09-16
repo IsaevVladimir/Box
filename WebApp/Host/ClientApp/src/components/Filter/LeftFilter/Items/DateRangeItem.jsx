@@ -1,4 +1,5 @@
 ﻿import React from 'react';
+import { connect } from 'dva';
 import { DatePicker } from 'antd';
 import moment from 'moment'
 
@@ -7,7 +8,7 @@ import styles from './ItemWrapper.less';
 
 const { RangePicker } = DatePicker;
 
-const DateRangeItem = ({ isCollapsed, form }) => {
+const DateRangeItem = ({ maxValue, minValue, isCollapsed, form }) => {
 
   return (
     <ItemWrapper
@@ -19,9 +20,15 @@ const DateRangeItem = ({ isCollapsed, form }) => {
       valuePropName='value'
       label='Date range:'
     >
-      <RangePicker className={styles.dateRangePicker} />
+      <RangePicker
+        className={styles.dateRangePicker}
+        disabledDate={momentDate => !(momentDate > maxValue || momentDate < minValue)}
+      />
     </ItemWrapper>
   );
 }
 
-export default DateRangeItem;
+export default connect(({ setting }) => ({
+  maxValue: setting.dateRange.max,
+  minValue: setting.dateRange.min
+}))(DateRangeItem);
