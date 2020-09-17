@@ -2,6 +2,7 @@
 import { connect } from 'dva';
 import { Table } from 'antd'
 import get from 'lodash/get'
+import { parseQueryParams } from '../../utils/router'
 
 import Main from '../../layouts/baseLayout/main.jsx';
 import FilterWrapper from '../../components/Filter/LeftFilter/Wrapper';
@@ -24,13 +25,15 @@ const columns = [
   },
 ];
 
-function Index({ location, dataSource, fetchDataSource }) {
+function Index({ match, location, dataSource, fetchDataSource }) {
 
   const search = useMemo(() => {
     return get(location, 'search', '');
   }, [location]);
 
   useEffect(() => {
+    const queryParams = parseQueryParams(search);
+    console.log(queryParams);
     // fetchDataSource();
   }, [search])
 
