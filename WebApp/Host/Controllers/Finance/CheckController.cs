@@ -1,4 +1,5 @@
-﻿using System.Collections.Generic;
+﻿using System;
+using System.Collections.Generic;
 using System.Threading.Tasks;
 using Microsoft.AspNetCore.Mvc;
 using WebApp.Host.Services.FinanceService;
@@ -28,13 +29,22 @@ namespace WebApp.Host.Controllers.Finance
         }
         
         [HttpPost]
-        public async Task<ActionResult<CheckDto>> Post(CheckDto check)
+        public async Task<ActionResult<List<CheckDto>>> Post([FromBody] CheckFilter filter)
+        {
+            if (filter is null)
+                return new BadRequestResult();
+            
+            return await _financeService.GetChecks(0, filter);
+        }
+        
+        [HttpPut]
+        public async Task<ActionResult<CheckDto>> Put([FromBody] CheckDto check)
         {
             return await _financeService.AddCheck(0, check);
         }
         
         [HttpPatch]
-        public async Task<ActionResult<CheckDto>> Patch(CheckDto check)
+        public async Task<ActionResult<CheckDto>> Patch([FromBody] CheckDto check)
         {
             return await _financeService.UpdateCheck(0, check);
         }

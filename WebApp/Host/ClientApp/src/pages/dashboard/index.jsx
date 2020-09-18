@@ -14,19 +14,6 @@ import PriceItem from '../../components/Filter/LeftFilter/Items/PriceItem';
 
 import styles from './index.less';
 
-const columns = [
-  { title: 'Name', dataIndex: 'name', key: 'name' },
-  { title: 'Price', dataIndex: 'price', key: 'price' },
-  { title: 'Dt', dataIndex: 'payDt', key: 'payDt' },
-  { title: 'Location', dataIndex: 'location', key: 'location' },
-  {
-    title: 'Action',
-    dataIndex: '',
-    key: 'x',
-    render: () => <a>Delete</a>,
-  },
-];
-
 function Index({ location, dataSource, fetchDataSource }) {
 
   const [categories, fromDt, toDt, minPrice, maxPrice] = useMemo(() => {
@@ -54,25 +41,12 @@ function Index({ location, dataSource, fetchDataSource }) {
     <CategoryItem value={categories} />,
     <DateRangeItem value={[fromDt, toDt]} />,
     <PriceItem value={[minPrice, maxPrice]} />
-    ];
-
-  const renderActionPanel = () => {
-    return (
-      <div>
-        <Button type='primary'>Add</Button>
-      </div>
-    );
-  };
+  ];
 
   return (
     <Main location={location}>
       <FilteredContentLayout filterItems={filterItems} >
-        {renderActionPanel()}
-        <Table
-          style={{ width: '100%' }}
-          columns={columns}
-          dataSource={dataSource}
-        />
+        Dashboard
       </FilteredContentLayout>
     </Main>
   );

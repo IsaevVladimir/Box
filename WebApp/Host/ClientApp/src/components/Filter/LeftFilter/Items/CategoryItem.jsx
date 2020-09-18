@@ -1,20 +1,25 @@
-﻿import React from 'react';
+﻿import React, { useEffect } from 'react';
 import { connect } from 'dva';
 import {TreeSelect} from 'antd';
 
-import ItemWrapper from './ItemWrapper';
+import ItemWrapper from '../ItemWrapper';
 
 const {TreeNode} = TreeSelect;
 import {listToTree} from '../../../../utils/tree';
 
-const CategoryItem = ({isCollapsed, form, list}) => {
+const CategoryItem = ({ value, isCollapsed, form, list, fetchList}) => {
+
+  useEffect(() => {
+    fetchList();
+  }, [])
+
   const treeData = listToTree(list)
 
   const renderTreeNodes = data => {
     return data.map(item => {
       if (item.children) {
         return (
-          <TreeNode title={item.Name} key={item.Id} value={item.Id}>
+          <TreeNode title={item.name} key={item.id} value={item.id}>
             {renderTreeNodes(item.children)}
           </TreeNode>
         );
@@ -29,13 +34,14 @@ const CategoryItem = ({isCollapsed, form, list}) => {
       form={form}
       iconType='calendar'
       initialValue={0}
-      fieldName='categoryId'
+      fieldName='categories'
       valuePropName='value'
       label='Check categories:'
     >
       <TreeSelect
         treeCheckable
         showCheckedStrategy={TreeSelect.SHOW_PARENT}
+        value={value}
       >
         {renderTreeNodes(treeData)}
       </TreeSelect>
@@ -45,4 +51,6 @@ const CategoryItem = ({isCollapsed, form, list}) => {
 
 export default connect(({ checkCategory }) => ({
   list: checkCategory.list
+}), dispatch => ({
+  fetchList: () => dispatch({type: 'checkCategory/fetch'})
 }))(CategoryItem);

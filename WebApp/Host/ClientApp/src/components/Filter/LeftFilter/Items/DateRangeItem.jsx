@@ -1,22 +1,21 @@
 ﻿import React from 'react';
 import { connect } from 'dva';
 import { DatePicker } from 'antd';
-import moment from 'moment'
 
-import ItemWrapper from './ItemWrapper';
-import styles from './ItemWrapper.less';
+import ItemWrapper from '../ItemWrapper';
+import styles from '../ItemWrapper.less';
 
 const { RangePicker } = DatePicker;
 
-const DateRangeItem = ({ maxValue, minValue, isCollapsed, form }) => {
+const DateRangeItem = ({ value, maxValue, minValue, isCollapsed, form }) => {
 
   return (
     <ItemWrapper
       isCollapsed={isCollapsed}
       form={form}
       iconType='bars'
-      initialValue={[moment(), moment()]}
       fieldName='dateRange'
+      initialValue={value}
       valuePropName='value'
       label='Date range:'
     >

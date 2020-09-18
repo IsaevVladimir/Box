@@ -5,6 +5,7 @@ import map from 'lodash/map';
 import unset from 'lodash/unset';
 import startsWith from 'lodash/startsWith';
 import isArray from 'lodash/isArray';
+import isNumber from 'lodash/isNumber';
 import moment from 'moment';
 
 
@@ -51,21 +52,29 @@ const convertProperties = (props) => {
 }
 const convertProperty = (props, name, value) => {
   if (isArray(value)) {
-    let converted = false;
+    let convertedNamePrefix;
     map(value, (arrayValue, index) => {
       if (moment.isMoment(arrayValue)) {
         props[name].splice(index, index + 1, arrayValue.format());
-        converted = true;
+        convertedNamePrefix = 'moment_';
+      }
+      if (isNumber(arrayValue)) {
+        props[name].splice(index, index + 1, arrayValue);
+        convertedNamePrefix = 'number_'
       }
       return arrayValue;
     });
-    if (converted) {
-      props[`moment_${name}`] = [...props[name]];
+    if (!isNil(convertedNamePrefix)) {
+      props[`${convertedNamePrefix}${name}`] = [...props[name]];
       delete props[name];
     }
   }
   if (moment.isMoment(value)) {
     props[`moment_${name}`] = value.format();
+    unset(props, name);
+  }
+  if (isNumber(value)) {
+    props[`number_${name}`] = value;
     unset(props, name);
   }
 }
@@ -83,6 +92,10 @@ const reverseConvertProperty = (props, name, value) => {
         value[index] = moment(arrayValue);
         converted = true;
       }
+      if (startsWith(name, 'number_')) {
+        value[index] = Number(arrayValue);
+        converted = true;
+      }
     });
     if (converted) {
       props[removePrefix(name, 'moment_')] = [...props[name]];
@@ -91,6 +104,10 @@ const reverseConvertProperty = (props, name, value) => {
   }
   if (!converted && startsWith(name, 'moment_')) {
     props[removePrefix(name, 'moment_')] = moment(value);
+    unset(props, name);
+  }
+  if (!converted && startsWith(name, 'number_')) {
+    props[removePrefix(name, 'number_')] = Number(value);
     unset(props, name);
   }
 }

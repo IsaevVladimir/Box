@@ -42,7 +42,7 @@ namespace WebApp.Host.Services
             
             #region finance service
             config.CreateMap<CheckDm, CheckDto>().ReverseMap();
-            config.CreateMap<CheckCategoryDm, CheckCategoryDm>().ReverseMap();
+            config.CreateMap<CheckCategoryDm, CheckCategoryDto>().ReverseMap();
             #endregion
         }
     }

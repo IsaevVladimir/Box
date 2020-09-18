@@ -1,134 +1,149 @@
-import qs from 'qs';
-import _ from 'lodash';
-import Axios from 'axios';
-import {
-  notification
-} from 'antd';
+﻿import fetch from 'dva/fetch';
+import { notification } from 'antd';
+import toLower from 'lodash/toLower';
 
-const reqConfig = {
-  withCredentials: true
+const codeMessage = {
+  200: 'OK',
+  201: 'Created',
+  202: 'Accepted',
+  204: 'No Content',
+  400: 'Bad Request',
+  401: 'Unauthorized',
+  403: 'Forbidden',
+  404: 'Not Found',
+  406: 'Not Acceptable',
+  410: 'Gone',
+  422: 'Misdirected Request',
+  500: 'Internal Server Error',
+  502: 'Bad Gateway',
+  503: 'Service Unavailable',
+  504: 'Gateway Timeout',
 };
 
-const Request = Axios.create(reqConfig);
+const sRouteTimetable = '/api/timetable'; // lowerCase
+const sRouteTimetableShift = '/api/timetableshift'; // lowerCase
 
-function fetch(method, url, data, inConfig = false) {
-  let cancel = () => {};
-  const cancelToken = new Axios.CancelToken((c) => {
-    cancel = c;
-  });
+const checkStatus = (response, errorNotificationIsEnabled) => {
+  const { url, status } = response;
+  const sUrl = toLower(url);
+  if (
+    (sUrl.substr(sUrl.indexOf(sRouteTimetable), sRouteTimetable.length) === sRouteTimetable ||
+      sUrl.substr(sUrl.indexOf(sRouteTimetableShift), sRouteTimetableShift.length) ===
+      sRouteTimetableShift) &&
+    status === 400
+  ) {
+    return response;
+  }
 
-  const promise = (inConfig
-    ? Request[method](url, {
-      params: data,
-      cancelToken
-    })
-    : Request[method](url, data, {
-      cancelToken
-    })
-  );
+  if (url.substr(-11, 11) === 'users/token' && status === 401) {
+    return response;
+  }
 
-  return {
-    promise,
-    cancel
+  if (status >= 200 && status < 300) {
+    return response;
+  }
+
+  const errortext = codeMessage[status] || response.statusText;
+
+  // disable error message when user is unauthorised
+  if (status !== 401 && errorNotificationIsEnabled(status)) {
+    notification.error({
+      message: `ERROR ${status}: ${url}`,
+      description: errortext,
+    });
+  }
+
+  const error = new Error(errortext);
+  error.name = status;
+  error.response = response;
+  throw error;
+};
+
+function setAuth(options) {
+  const token = localStorage.getItem('token');
+
+  const headers = token
+    ? {
+      Authorization: `Bearer ${token}`,
+      ...options.headers,
+    }
+    : options.headers;
+
+  return { ...options, headers };
+}
+
+/**
+ * Requests a URL, returning a promise.
+ *
+ * @param  {string} url       The URL we want to request
+ * @param  {object} [options] The options we want to pass to "fetch"
+ * @return {object}           An object containing either "data" or "err"
+ */
+export default function request(url, options) {
+  /**
+   * Produce fingerprints based on url and parameters
+   * Maybe url has the same parameters
+   */
+  const defaultOptions = {
+    credentials: 'include',
+    cacheEnabled: false,
+    errorNotificationIsEnabled: () => true,
+    checkStatus,
   };
-}
-
-function get(url, data) {
-  return fetch('get', url, data, true);
-}
-
-function post(url, data) {
-  return fetch('post', url, data, false);
-}
-
-function put(url, data) {
-  return fetch('put', url, data, false);
-}
-
-function patch(url, data) {
-  return fetch('patch', url, data, false);
-}
-
-function del(url, data) {
-  return fetch('delete', url, data, true);
-}
-
-function throwReqError(resp) {
-  const error = new Error(resp.statusText);
-  error.resp = resp;
-  return Promise.reject(error);
-}
-
-function checkStatus(resp) {
-  if ((resp.status >= 200) && (resp.status < 300)) {
-    return resp;
+  const newOptions = { ...defaultOptions, ...options };
+  if (
+    newOptions.method === 'POST' ||
+    newOptions.method === 'PUT' ||
+    newOptions.method === 'PATCH' ||
+    newOptions.method === 'DELETE'
+  ) {
+    if (!(newOptions.body instanceof FormData)) {
+      newOptions.headers = {
+        Accept: 'application/json',
+        'Content-Type': 'application/json; charset=utf-8',
+        ...newOptions.headers,
+      };
+      newOptions.body = JSON.stringify(newOptions.body);
+    } else {
+      // newOptions.body is FormData
+      newOptions.headers = {
+        Accept: 'application/json',
+        ...newOptions.headers,
+      };
+    }
   }
 
-  notification.error({
-    message: `请求错误 ${resp.status}: ${resp.url}`,
-    description: resp.statusText
-  });
-
-  return throwReqError(resp);
-}
-
-function throwSrvError(data) {
-  const error = new Error(data.msg);
-  error.srv = data;
-  return Promise.reject(error);
-}
-
-function checkCode(data) {
-  if (data && (data.code !== 0)) {
-    return throwSrvError(data);
+  const token = localStorage.getItem('token');
+  if (token) {
+    newOptions.headers = {
+      Authorization: `Bearer ${token}`,
+      ...newOptions.headers,
+    };
   }
 
-  return data;
-}
 
-function handleReqError(err) {
-  if (Axios.isCancel(err)) {
-    console.warn('Request canceled', err.message);
-  }
-
-  throw err;
-}
-
-function handleRequest(req) {
-  return {
-    ...req,
-    promise: req.promise
-      .then(checkStatus)
-      .then(resp => resp.data)
-      .then(checkCode)
-      .catch(handleReqError)
-  };
-}
-
-export function getJson(url, data) {
-  const _data = data ? _.cloneDeep(data) : {};
-  _data._t_ = _.now();
-  return handleRequest(get(url, _data));
-}
-
-export function postJson(url, data) {
-  return handleRequest(post(url, data));
-}
-
-export function postForm(url, data) {
-  return handleRequest(post(url, qs.stringify(data)));
-}
-
-export function putJson(url, data) {
-  return handleRequest(put(url, data));
-}
-
-export function patchJson(url, data) {
-  return handleRequest(patch(url, data));
-}
-
-export function deleteJson(url, data) {
-  const _data = data ? _.cloneDeep(data) : {};
-  _data._t_ = _.now();
-  return handleRequest(del(url, _data));
+  return fetch(url, newOptions)
+    .then(response => newOptions.checkStatus(response, newOptions.errorNotificationIsEnabled))
+    .then(response => {
+      // DELETE and 204 do not return data by default
+      // using .json will report an error.
+      if (
+        newOptions.method === 'DELETE' ||
+        newOptions.method === 'HEAD' ||
+        response.status === 204
+      ) {
+        return response.text();
+      }
+      return response.json();
+    })
+    .catch(e => {
+      const status = e.name;
+      if (status === 401) {
+        // @HACK
+        /* eslint-disable no-underscore-dangle */
+        /*window.g_app._store.dispatch({
+          type: 'login/logout',
+        });*/
+      }
+    });
 }

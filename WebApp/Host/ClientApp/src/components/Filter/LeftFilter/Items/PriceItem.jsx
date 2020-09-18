@@ -2,17 +2,17 @@
 import { connect } from 'dva';
 import { Slider } from 'antd';
 
-import ItemWrapper from './ItemWrapper';
-import styles from './ItemWrapper.less'
+import ItemWrapper from '../ItemWrapper';
+import styles from '../ItemWrapper.less'
 
-const PriceItem = ({ maxValue, minValue, value, isCollapsed, form }) => {
+const PriceItem = ({ value, maxValue, minValue, isCollapsed, form }) => {
   return (
     <ItemWrapper
       isCollapsed={isCollapsed}
       form={form}
       iconType='pay-circle'
-      initialValue={[0, 100]}
-      fieldName='price'
+      initialValue={[0, 300]}
+      fieldName='priceRange'
       valuePropName='value'
       label='Price range:'
     >

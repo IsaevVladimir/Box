@@ -19,14 +19,11 @@ function Header({
         mode="horizontal"
         defaultSelectedKeys={[location.pathname]}
       >
-        <Menu.Item key="/page01">
-          <Link to="/page01"><Icon type="dashboard" />Dashboard</Link>
+        <Menu.Item key="/Dashboard">
+          <Link to="/Dashboard"><Icon type="dashboard" />Dashboard</Link>
         </Menu.Item>
-        <Menu.Item key="/page02">
-          <Link to="/page02"><Icon type="home" />Checks</Link>
-        </Menu.Item>
-        <Menu.Item key="/page03">
-          <Link to="/page03"><Icon type="home" />Categories</Link>
+        <Menu.Item key="/Check">
+          <Link to="/Check"><Icon type="home" />Checks</Link>
         </Menu.Item>
       </Menu>
     </header>

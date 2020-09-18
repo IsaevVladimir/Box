@@ -8,7 +8,7 @@ import Authorization from '../../components/Authorization';
 import Header from './header.jsx';
 import Footer from './footer.jsx';
 
-import styles from './main.less';
+import styles from './index.less';
 
 function Main({children, location}) {
   return (

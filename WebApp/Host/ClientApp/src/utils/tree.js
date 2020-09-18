@@ -1,4 +1,4 @@
-﻿export const listToTree = (list, idPropName = 'Id', parentIdPropName = 'ParentId') => {
+﻿export const listToTree = (list, idPropName = 'id', parentIdPropName = 'parentId') => {
   let map = {}, node, roots = [], i;
 
   for (i = 0; i < list.length; i += 1) {
