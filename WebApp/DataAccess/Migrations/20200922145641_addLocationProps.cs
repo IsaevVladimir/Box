@@ -4,7 +4,7 @@ using Npgsql.EntityFrameworkCore.PostgreSQL.Metadata;
 
 namespace WebApp.DataAccess.Migrations
 {
-    public partial class InitialCreate : Migration
+    public partial class addLocationProps : Migration
     {
         protected override void Up(MigrationBuilder migrationBuilder)
         {
@@ -31,10 +31,12 @@ namespace WebApp.DataAccess.Migrations
                         .Annotation("Npgsql:ValueGenerationStrategy", NpgsqlValueGenerationStrategy.IdentityByDefaultColumn),
                     Name = table.Column<string>(nullable: true),
                     Description = table.Column<string>(nullable: true),
-                    Location = table.Column<string>(nullable: true),
                     PayDt = table.Column<DateTime>(nullable: false),
                     Price = table.Column<double>(nullable: false),
-                    CategoryId = table.Column<int>(nullable: true)
+                    Currency = table.Column<int>(nullable: false),
+                    CategoryId = table.Column<int>(nullable: true),
+                    Latitude = table.Column<double>(nullable: true),
+                    Longitude = table.Column<double>(nullable: true)
                 },
                 constraints: table =>
                 {

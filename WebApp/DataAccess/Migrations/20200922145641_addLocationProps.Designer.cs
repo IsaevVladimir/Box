@@ -10,8 +10,8 @@ using WebApp.DataAccess;
 namespace WebApp.DataAccess.Migrations
 {
     [DbContext(typeof(CustomDbContext))]
-    [Migration("20200907143237_InitialCreate")]
-    partial class InitialCreate
+    [Migration("20200922145641_addLocationProps")]
+    partial class addLocationProps
     {
         protected override void BuildTargetModel(ModelBuilder modelBuilder)
         {
@@ -31,11 +31,17 @@ namespace WebApp.DataAccess.Migrations
                     b.Property<int?>("CategoryId")
                         .HasColumnType("integer");
 
+                    b.Property<int>("Currency")
+                        .HasColumnType("integer");
+
                     b.Property<string>("Description")
                         .HasColumnType("text");
 
-                    b.Property<string>("Location")
-                        .HasColumnType("text");
+                    b.Property<double?>("Latitude")
+                        .HasColumnType("double precision");
+
+                    b.Property<double?>("Longitude")
+                        .HasColumnType("double precision");
 
                     b.Property<string>("Name")
                         .HasColumnType("text");

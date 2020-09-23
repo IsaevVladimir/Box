@@ -10,7 +10,7 @@ const ItemWrapper = ({ history, location, isCollapsed, iconType, label, children
   const { getFieldDecorator } = form;
 
   const onChange = (e) => {
-    historyUpdate(history, location.search, '/Check', fieldName, e);
+    historyUpdate(history, location.search, location.pathname, fieldName, e);
   }
 
   return (

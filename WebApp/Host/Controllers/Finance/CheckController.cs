@@ -40,12 +40,18 @@ namespace WebApp.Host.Controllers.Finance
         [HttpPut]
         public async Task<ActionResult<CheckDto>> Put([FromBody] CheckDto check)
         {
+            if (check is null)
+                return new BadRequestResult();
+            
             return await _financeService.AddCheck(0, check);
         }
         
         [HttpPatch]
         public async Task<ActionResult<CheckDto>> Patch([FromBody] CheckDto check)
         {
+            if (check is null)
+                return new BadRequestResult();
+            
             return await _financeService.UpdateCheck(0, check);
         }
         

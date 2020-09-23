@@ -19,7 +19,8 @@
     "qs": "^6.5.1",
     "query-string": "^5.1.1",
     "react": "^16.8.4",
-    "react-dom": "^16.8.4"
+    "react-dom": "^16.8.4",
+    "react-yandex-maps": "^4.4.0"
   },
   "devDependencies": {
     "babel-eslint": "^8.2.2",

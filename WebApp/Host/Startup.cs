@@ -68,7 +68,7 @@ namespace WebApp.Host
                 }
             });
 
-            InitializeDatabase(app);
+            // InitializeDatabase(app);
         }
         
         private void InitializeDatabase(IApplicationBuilder app)

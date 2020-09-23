@@ -1,6 +1,5 @@
 ﻿import React, { useMemo, useEffect } from 'react';
 import { connect } from 'dva';
-import { Table, Button } from 'antd'
 import get from 'lodash/get'
 import isNumber from 'lodash/isNumber'
 import moment from 'moment';
@@ -8,27 +7,14 @@ import { parseQueryParams } from '../../utils/router'
 
 import Main from '../../layouts/baseLayout';
 import FilteredContentLayout from '../../layouts/filteredContentLayout';
+
 import CategoryItem from '../../components/Filter/LeftFilter/Items/CategoryItem';
 import DateRangeItem from '../../components/Filter/LeftFilter/Items/DateRangeItem';
 import PriceItem from '../../components/Filter/LeftFilter/Items/PriceItem';
 
-import styles from './index.less';
+import CheckContent from './components/CheckContent'
 
-const columns = [
-  { title: 'Name', dataIndex: 'name', key: 'name' },
-  { title: 'Price', dataIndex: 'price', key: 'price' },
-  { title: 'Dt', dataIndex: 'payDt', key: 'payDt' },
-  { title: 'Location', dataIndex: 'location', key: 'location' },
-  {
-    title: 'Action',
-    dataIndex: '',
-    key: 'x',
-    render: () => <a>Delete</a>,
-  },
-];
-
-function Index({ location, dataSource, fetchDataSource }) {
-
+function Index({ location, fetchDataSource }) {
   const [categories, fromDt, toDt, minPrice, maxPrice] = useMemo(() => {
     const filterValues = parseQueryParams(get(location, 'search', ''));
 
@@ -56,30 +42,15 @@ function Index({ location, dataSource, fetchDataSource }) {
     <PriceItem value={[minPrice, maxPrice]} />
     ];
 
-  const renderActionPanel = () => {
-    return (
-      <div>
-        <Button type='primary'>Add</Button>
-      </div>
-    );
-  };
-
   return (
     <Main location={location}>
       <FilteredContentLayout filterItems={filterItems} >
-        {renderActionPanel()}
-        <Table
-          style={{ width: '100%' }}
-          columns={columns}
-          dataSource={dataSource}
-        />
+        <CheckContent />
       </FilteredContentLayout>
     </Main>
   );
 }
 
-export default connect(({ check }) => ({
-  dataSource: check.list
-}), dispatch => ({
+export default connect(null, dispatch => ({
   fetchDataSource: payload => dispatch({type: 'check/fetch', payload})
 }))(Index);

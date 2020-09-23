@@ -1,6 +1,5 @@
 ﻿import React, { useMemo, useEffect } from 'react';
 import { connect } from 'dva';
-import { Table, Button } from 'antd'
 import get from 'lodash/get'
 import isNumber from 'lodash/isNumber'
 import moment from 'moment';
@@ -14,7 +13,7 @@ import PriceItem from '../../components/Filter/LeftFilter/Items/PriceItem';
 
 import styles from './index.less';
 
-function Index({ location, dataSource, fetchDataSource }) {
+function Index({ location, currency, dataSource, fetchDataSource }) {
 
   const [categories, fromDt, toDt, minPrice, maxPrice] = useMemo(() => {
     const filterValues = parseQueryParams(get(location, 'search', ''));
@@ -46,14 +45,15 @@ function Index({ location, dataSource, fetchDataSource }) {
   return (
     <Main location={location}>
       <FilteredContentLayout filterItems={filterItems} >
-        Dashboard
+
       </FilteredContentLayout>
     </Main>
   );
 }
 
 export default connect(({ check }) => ({
-  dataSource: check.list
+  dataSource: check.list,
+  currency: check.currency
 }), dispatch => ({
   fetchDataSource: payload => dispatch({type: 'check/fetch', payload})
 }))(Index);

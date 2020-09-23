@@ -1,4 +1,6 @@
-﻿using AutoMapper;
+﻿using System.Collections.Generic;
+using System.Linq;
+using AutoMapper;
 using AutoMapper.Configuration;
 using WebApp.Common;
 using WebApp.DataAccess.DataModels;
@@ -41,7 +43,20 @@ namespace WebApp.Host.Services
             #endregion
             
             #region finance service
-            config.CreateMap<CheckDm, CheckDto>().ReverseMap();
+
+            config.CreateMap<CheckDm, CheckDto>()
+                .ForMember(d => d.Coordinates, src =>
+                    src.MapFrom(z =>
+                        (z.Longitude == null || z.Latitude == null ? default(List<double>) : new List<double>() { z.Longitude.Value, z.Latitude.Value })));
+            
+            config.CreateMap<CheckDto, CheckDm>()
+                .ForMember(d => d.Longitude, src =>
+                    src.MapFrom(z =>
+                        (z.Coordinates == null || !z.Coordinates.Any() ? default(double?) : z.Coordinates.FirstOrDefault())))
+                .ForMember(d => d.Latitude, src =>
+                    src.MapFrom(z =>
+                        (z.Coordinates == null || !z.Coordinates.Any() ? default(double?) : z.Coordinates.LastOrDefault())));
+            
             config.CreateMap<CheckCategoryDm, CheckCategoryDto>().ReverseMap();
             #endregion
         }
