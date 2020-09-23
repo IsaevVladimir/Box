@@ -2,17 +2,18 @@
 import { YMaps, Map, Placemark } from 'react-yandex-maps';
 import isArray from 'lodash/isArray'
 import get from 'lodash/get';
+import NormalizeFormItem from "../NormalizeFormItem";
 
-export default ({ coords, setValue }) => {
+export default ({ form, coords, setValue, initialValue }) => {
   const onClickHandler = (e) => {
     setValue(e.get("coords"));
   }
 
   return (
-    <div>
+    <NormalizeFormItem form={form} label='Coordinates' fieldName='coordinates' initialValue={initialValue}>
       <YMaps>
         <Map
-          style={{ width: '100%', height: '200px' }}
+          style={{ width: '200px', height: '200px' }}
           defaultState={{ center: [55.75, 37.57], zoom: 9 }}
           onClick={onClickHandler}
         >
@@ -23,6 +24,6 @@ export default ({ coords, setValue }) => {
           )}
         </Map>
       </YMaps>
-    </div>
+    </NormalizeFormItem>
   );
 }

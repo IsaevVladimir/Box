@@ -20,14 +20,6 @@ const CheckContent = ({ dataSource, currency, removeCheck }) => {
   }
 
   const renderActionColumn = (id) => {
-
-    return (
-      <div>
-        <Icon type="edit" onClick={() => openModal(id)} />
-        <Icon type="delete" onClick={() => removeCheck(id)} />
-      </div>
-    );
-
     const menu = (
       <Menu>
         <Menu.Item onClick={() => openModal(id)}>
@@ -41,8 +33,8 @@ const CheckContent = ({ dataSource, currency, removeCheck }) => {
     );
 
     return (
-      <Dropdown overlay={menu}>
-        <a>Action</a>
+      <Dropdown overlay={menu} placement='bottomLeft'>
+        <Icon type="more" />
       </Dropdown>
     );
   }
@@ -51,9 +43,10 @@ const CheckContent = ({ dataSource, currency, removeCheck }) => {
     { title: 'Price', dataIndex: 'price', key: 'price' },
     { title: 'Dt', dataIndex: 'payDt', key: 'payDt' },
     {
-      title: 'Action',
       dataIndex: 'id',
-      key: 'x',
+      key: 'action',
+      fixed: 'right',
+      width: '10px',
       render: renderActionColumn,
     },
   ];

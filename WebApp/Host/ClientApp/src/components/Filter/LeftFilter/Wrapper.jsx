@@ -1,5 +1,5 @@
-﻿import React, { useState, useRef, cloneElement } from 'react';
-import { Form, Switch } from 'antd';
+﻿import React, { useState, cloneElement } from 'react';
+import { Form } from 'antd';
 import isArray from 'lodash/isArray';
 
 import styles from './Wrapper.less'
