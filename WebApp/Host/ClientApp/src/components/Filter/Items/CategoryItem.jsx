@@ -5,9 +5,9 @@ import {TreeSelect} from 'antd';
 import ItemWrapper from '../ItemWrapper';
 
 const {TreeNode} = TreeSelect;
-import {listToTree} from '../../../../utils/tree';
+import {listToTree} from '../../../utils/tree';
 
-const CategoryItem = ({ value, isCollapsed, form, list, fetchList}) => {
+const CategoryItem = ({ value, form, list, fetchList}) => {
 
   useEffect(() => {
     fetchList();
@@ -30,17 +30,14 @@ const CategoryItem = ({ value, isCollapsed, form, list, fetchList}) => {
 
   return (
     <ItemWrapper
-      isCollapsed={isCollapsed}
       form={form}
-      iconType='calendar'
-      initialValue={0}
       fieldName='categories'
-      valuePropName='value'
       label='Check categories:'
     >
       <TreeSelect
+        placeholder='Select all'
         treeCheckable
-        showCheckedStrategy={TreeSelect.SHOW_PARENT}
+        showCheckedStrategy={TreeSelect.SHOW_ALL}
         value={value}
       >
         {renderTreeNodes(treeData)}

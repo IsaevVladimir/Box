@@ -1,6 +1,6 @@
 ﻿import React from 'react';
 import styles from './index.less';
-import FilterWrapper from '../../components/Filter/LeftFilter/Wrapper';
+import FilterWrapper from '../../components/Filter/FilterWrapper';
 
 const FilteredContentLayout = ({ filterItems, children }) => {
 

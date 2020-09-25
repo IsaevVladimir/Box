@@ -8,9 +8,9 @@ import { parseQueryParams } from '../../utils/router'
 import Main from '../../layouts/baseLayout';
 import FilteredContentLayout from '../../layouts/filteredContentLayout';
 
-import CategoryItem from '../../components/Filter/LeftFilter/Items/CategoryItem';
-import DateRangeItem from '../../components/Filter/LeftFilter/Items/DateRangeItem';
-import PriceItem from '../../components/Filter/LeftFilter/Items/PriceItem';
+import CategoryItem from '../../components/Filter/Items/CategoryItem';
+import DateRangeItem from '../../components/Filter/Items/DateRangeItem';
+import PriceItem from '../../components/Filter/Items/PriceItem';
 
 import CheckContent from './components/CheckContent'
 

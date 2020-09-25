@@ -3,26 +3,19 @@ import { connect } from 'dva';
 import { DatePicker } from 'antd';
 
 import ItemWrapper from '../ItemWrapper';
-import styles from '../ItemWrapper.less';
 
 const { RangePicker } = DatePicker;
 
-const DateRangeItem = ({ value, maxValue, minValue, isCollapsed, form }) => {
+const DateRangeItem = ({ value, maxValue, minValue, form }) => {
 
   return (
     <ItemWrapper
-      isCollapsed={isCollapsed}
       form={form}
-      iconType='bars'
       fieldName='dateRange'
       initialValue={value}
-      valuePropName='value'
       label='Date range:'
     >
-      <RangePicker
-        className={styles.dateRangePicker}
-        disabledDate={momentDate => !(momentDate > maxValue || momentDate < minValue)}
-      />
+      <RangePicker disabledDate={momentDate => !(momentDate > maxValue || momentDate < minValue)} />
     </ItemWrapper>
   );
 }

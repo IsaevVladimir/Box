@@ -1,4 +1,6 @@
-﻿export const listToTree = (list, idPropName = 'id', parentIdPropName = 'parentId') => {
+﻿import map from 'lodash/map';
+
+export const listToTree = (list, idPropName = 'id', parentIdPropName = 'parentId') => {
   let map = {}, node, roots = [], i;
 
   for (i = 0; i < list.length; i += 1) {
@@ -15,4 +17,10 @@
     }
   }
   return roots;
+};
+
+export const normalizeListToTreeSelect = (list, valuePropsName = 'value', titlePropsName = 'title') => {
+  return map(list, x => {
+    return { ...x, [valuePropsName]: x.id, [titlePropsName]: x.name };
+  })
 };

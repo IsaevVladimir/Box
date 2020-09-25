@@ -1,6 +1,10 @@
 ﻿import React, {useState, useMemo} from 'react';
 import { connect } from 'dva';
 import { Table, Menu, Dropdown, Icon } from 'antd';
+import isNil from 'lodash/isNil';
+import get from 'lodash/get';
+import find from 'lodash/find';
+import eq from 'lodash/eq';
 
 import ControlPanel from './ControlPanel';
 import MapContent from './MapContent';
@@ -8,7 +12,7 @@ import EditModal from './EditModal';
 
 import { filterArrayBySearchValue } from '../../../selectors/array'
 
-const CheckContent = ({ dataSource, currency, removeCheck }) => {
+const CheckContent = ({ dataSource, currency, categories, removeCheck }) => {
   const [searchValue, setSearchValue] = useState('');
   const [editCheck, setEditCheck] = useState(null);
 
@@ -40,7 +44,15 @@ const CheckContent = ({ dataSource, currency, removeCheck }) => {
   }
   const columns = [
     { title: 'Name', dataIndex: 'name', key: 'name' },
-    { title: 'Price', dataIndex: 'price', key: 'price' },
+    { title: 'Category',
+      dataIndex: 'categoryId',
+      key: 'categoryId',
+      render: categoryId => isNil(categoryId) ? '-' : get(find(categories, x => eq(categoryId, get(x, 'id'))), 'name')
+    },
+    { title: 'Price',
+      dataIndex: 'price',
+      key: 'price',
+      render: (price, row) => `${price} ${get(currency, `[${get(row, 'currency', 0)}]`)}`},
     { title: 'Dt', dataIndex: 'payDt', key: 'payDt' },
     {
       dataIndex: 'id',
@@ -59,20 +71,16 @@ const CheckContent = ({ dataSource, currency, removeCheck }) => {
     <div>
       <ControlPanel openModal={openModal} setSearchValue={setSearchValue} />
       <MapContent dataSource={normalizeDataSource} currency={currency} openModal={openModal} />
-      <Table
-        rowKey='id'
-        style={{ width: '100%' }}
-        columns={columns}
-        dataSource={normalizeDataSource}
-      />
+      <Table rowKey='id' style={{ width: '100%' }} columns={columns} dataSource={normalizeDataSource} size='middle' />
       <EditModal closeModal={closeModal} check={editCheck} />
     </div>
   );
 }
 
-export default connect(({ check }) => ({
+export default connect(({ check, checkCategory }) => ({
   dataSource: check.list,
-  currency: check.currency
+  currency: check.currency,
+  categories: checkCategory.list
 }), dispatch => ({
   removeCheck: id => dispatch({type: 'check/remove', id})
 }))(CheckContent);

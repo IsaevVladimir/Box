@@ -1,0 +1,32 @@
+﻿.outerContainer {
+  margin: 0 0 10px 0;
+  // background-color: aquamarine;
+
+  .innerContainer {
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    flex-direction: column;
+
+    :global {
+      .ant-form-item {
+        width: 100%;
+        padding: 0 12px;
+
+        .ant-form-item-label {
+          display: flex;
+          width: 100%;
+          justify-content: center;
+
+          label {
+            text-align: center;
+
+            ::after {
+              margin: 0;
+            }
+          }
+        }
+      }
+    }
+  }
+}
