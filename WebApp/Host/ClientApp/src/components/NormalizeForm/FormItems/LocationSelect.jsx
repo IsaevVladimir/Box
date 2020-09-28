@@ -1,4 +1,4 @@
-﻿import React, { useMemo } from 'react';
+﻿import React, { useMemo, useCallback } from 'react';
 import {YMaps, Map, Placemark} from 'react-yandex-maps';
 import isArray from 'lodash/isArray'
 import get from 'lodash/get';
@@ -8,14 +8,12 @@ const defaultLocationCoords = [55.75, 37.57];
 
 export default ({ value, onChange }) => {
 
-  const onClickHandler = (e) => {
+  const onClickHandler = useCallback((e) => {
     if (!onChange) return;
     onChange(e.get("coords"));
-  }
+  }, [onChange]);
 
-  const center = useMemo(() => {
-    return isNil(value) ? defaultLocationCoords : value;
-  }, [value]);
+  const center = useMemo(() => isNil(value) ? defaultLocationCoords : value, [value]);
 
   return (
     <YMaps>

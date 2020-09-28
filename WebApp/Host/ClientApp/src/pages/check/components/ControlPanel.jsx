@@ -1,13 +1,13 @@
-﻿import React from 'react';
+﻿import React, {useCallback} from 'react';
 import { Button, Input } from 'antd';
 
 import styles from './ControlPanel.less'
 
 const ControlPanel = ({ openModal, setSearchValue }) => {
 
-  const searchOnChange = (e) => {
+  const searchOnChange = useCallback((e) => {
     setSearchValue(e.target.value);
-  }
+  }, []);
 
   return (
     <div className={styles.container}>

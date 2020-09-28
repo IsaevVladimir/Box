@@ -1,4 +1,4 @@
-﻿import React, { useState } from 'react';
+﻿import React, {useCallback, useState} from 'react';
 import {Form, Row, Input, Button, Col} from 'antd'
 
 import styles from './AuthorizationForm.less'
@@ -10,16 +10,16 @@ const AuthorizationForm = ({form}) => {
 
   const {getFieldDecorator, getFieldsError} = form;
 
-  const hasErrors = (fieldsError) => Object.keys(fieldsError).some(field => fieldsError[field]);
+  const hasErrors = useCallback((fieldsError) => Object.keys(fieldsError).some(field => fieldsError[field]), []);
 
-  const handleSubmit = e => {
+  const handleSubmit = useCallback(e => {
     e.preventDefault();
-    this.props.form.validateFields((err, values) => {
+    form.validateFields((err, values) => {
       if (!err) {
         console.log('Received values of form: ', values);
       }
     });
-  }
+  }, [form]);
 
   return (
     <div className={styles.outerContainer}>

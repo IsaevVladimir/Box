@@ -1,4 +1,4 @@
-﻿import React, { useEffect } from 'react';
+﻿import React, {useCallback, useEffect} from 'react';
 import { connect } from 'dva';
 import {TreeSelect} from 'antd';
 
@@ -15,7 +15,7 @@ const CategoryItem = ({ value, form, list, fetchList}) => {
 
   const treeData = listToTree(list)
 
-  const renderTreeNodes = data => {
+  const renderTreeNodes = useCallback(data => {
     return data.map(item => {
       if (item.children) {
         return (
@@ -26,7 +26,7 @@ const CategoryItem = ({ value, form, list, fetchList}) => {
       }
       return <TreeNode key={item.key} {...item} />;
     });
-  };
+  }, []);
 
   return (
     <ItemWrapper

@@ -1,4 +1,4 @@
-﻿import React, {useState, useMemo} from 'react';
+﻿import React, {useState, useMemo, useCallback} from 'react';
 import { connect } from 'dva';
 import { Table, Menu, Dropdown, Icon } from 'antd';
 import isNil from 'lodash/isNil';
@@ -16,14 +16,14 @@ const CheckContent = ({ dataSource, currency, categories, removeCheck }) => {
   const [searchValue, setSearchValue] = useState('');
   const [editCheck, setEditCheck] = useState(null);
 
-  const openModal = (id = null, coordinates = null) => {
+  const openModal = useCallback((id = null, coordinates = null) => {
     setEditCheck({ id, coordinates });
-  }
-  const closeModal = () => {
+  }, []);
+  const closeModal = useCallback(() => {
     setEditCheck(null);
-  }
+  }, []);
 
-  const renderActionColumn = (id) => {
+  const renderActionColumn = useCallback((id) => {
     const menu = (
       <Menu>
         <Menu.Item onClick={() => openModal(id)}>
@@ -41,7 +41,8 @@ const CheckContent = ({ dataSource, currency, categories, removeCheck }) => {
         <Icon type="more" />
       </Dropdown>
     );
-  }
+  }, []);
+
   const columns = [
     { title: 'Name', dataIndex: 'name', key: 'name' },
     { title: 'Category',

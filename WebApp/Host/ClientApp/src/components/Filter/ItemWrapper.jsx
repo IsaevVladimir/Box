@@ -1,4 +1,4 @@
-﻿import React from 'react'
+﻿import React, {useCallback} from 'react'
 import { withRouter } from 'react-router';
 import { historyUpdate } from '../../utils/router'
 
@@ -7,9 +7,9 @@ import styles from './ItemWrapper.less'
 
 const ItemWrapper = ({ history, location, label, children, initialValue, fieldName}) => {
 
-  const onChange = (e) => {
+  const onChange = useCallback((e) => {
     historyUpdate(history, location.search, location.pathname, fieldName, e);
-  }
+  }, [history, location, fieldName]);
 
   return (
     <div className={styles.outerContainer}>

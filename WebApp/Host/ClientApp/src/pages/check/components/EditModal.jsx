@@ -1,4 +1,4 @@
-﻿import React, {useState, useEffect, useMemo, useRef} from 'react';
+﻿import React, {useState, useEffect, useMemo, useRef, useCallback} from 'react';
 import {connect} from 'dva';
 import isNil from 'lodash/isNil';
 import get from 'lodash/get';
@@ -22,10 +22,10 @@ const EditModal = ({ check, checks, categories, closeModal, editCheck }) => {
 
   const formRef = useRef(null);
 
-  const onCancel = () => {
+  const onCancel = useCallback(() => {
     formRef.current.resetFields()
     closeModal();
-  }
+  }, []);
 
   const normalizeCheck = useMemo(() => {
     if (isNil(check)) return null;
@@ -34,12 +34,12 @@ const EditModal = ({ check, checks, categories, closeModal, editCheck }) => {
   }, [check, checks]);
   const visibleModal = useMemo(() => !isNil(normalizeCheck), [normalizeCheck]);
 
-  const onSubmit = async () => {
+  const onSubmit = useCallback(async () => {
     await formRef.current.validateFieldsAndScroll(async (errors, partialCheck) => {
       if (!isNil(errors) && !isEmpty(errors)) return;
       editCheck(assign(normalizeCheck, partialCheck)).then(() => onCancel()).catch(() => onCancel());
     });
-  }
+  }, []);
 
   const categoriesTree = useMemo(() => {
     return listToTree(normalizeListToTreeSelect(categories));

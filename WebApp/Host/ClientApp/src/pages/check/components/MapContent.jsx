@@ -1,13 +1,13 @@
-﻿import React from 'react';
+﻿import React, { useCallback } from 'react';
 import {Map, Placemark, YMaps} from 'react-yandex-maps';
 import map from 'lodash/map';
 import get from 'lodash/get';
 
 export default ({ dataSource, currency, openModal }) => {
 
-  const onMapClick = e => {
+  const onMapClick = useCallback(e => {
     openModal(null, e.get("coords"));
-  }
+  }, [openModal]);
 
   return (
     <YMaps>
