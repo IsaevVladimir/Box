@@ -11,6 +11,8 @@ import CategoryItem from '../../components/Filter/Items/CategoryItem';
 import DateRangeItem from '../../components/Filter/Items/DateRangeItem';
 import PriceItem from '../../components/Filter/Items/PriceItem';
 
+import LinearChart from '../../components/Charts/Linear/index';
+
 import styles from './index.less';
 
 function Index({ location, currency, dataSource, fetchDataSource }) {
@@ -45,7 +47,7 @@ function Index({ location, currency, dataSource, fetchDataSource }) {
   return (
     <Main location={location}>
       <FilteredContentLayout filterItems={filterItems} >
-
+        <LinearChart />
       </FilteredContentLayout>
     </Main>
   );
