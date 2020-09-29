@@ -1,5 +1,6 @@
 ﻿import moment from 'moment';
 import round from 'lodash/round';
+import reverse from 'lodash/reverse';
 
 export const calcInterval = (from, to) => {
   const unixFrom = moment(from).unix();
@@ -40,5 +41,5 @@ export const calcSections = (min, max, count) => {
   }
   intervals.push(max);
 
-  return intervals;
+  return reverse(intervals);
 };
