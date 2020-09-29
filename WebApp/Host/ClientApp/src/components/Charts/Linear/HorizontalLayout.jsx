@@ -1,40 +1,35 @@
 ﻿import React, {useContext} from 'react';
 import LinearChartContext from './LinearChartContext';
 
-import { calcSections } from './utils';
-
 export default () => {
-  const {width, height, max, min, sectionsCount, horizontalPadding, sectionHeight} = useContext(LinearChartContext);
-
-  const sections = calcSections(min, max, sectionsCount);
-  const lineOffset = (height - 30 - (horizontalPadding * 1)) / (sections.length - 1);
+  const { horizontalPoints } = useContext(LinearChartContext);
 
   return (
     <svg>
-      {sections.map((line, index) => {
+      {horizontalPoints.map((line, index) => {
         return (
           <line
             key={index.toString(36)}
-            x1={0}
-            y1={lineOffset * index + horizontalPadding}
-            x2={width}
-            y2={lineOffset * index + horizontalPadding}
+            x1={line.x1}
+            y1={line.y1}
+            x2={line.x2}
+            y2={line.y2}
             style={{stroke: '#f0f0f0', strokeWidth: 1, strokeDasharray: '4, 1'}}
             shapeRendering="crispEdges"
           />
         );
       })}
 
-      {sections.map((val, index) => {
+      {horizontalPoints.map((line, index) => {
         return (
           <text
             key={index.toString(36)}
-            x={0}
-            y={lineOffset * index + horizontalPadding + 4}
+            x={line.x}
+            y={line.y}
             fill='#000'
             style={{pointerEvents: 'none', userSelect: 'none'}}
           >
-            {val}
+            {line.text}
           </text>
         );
       })}

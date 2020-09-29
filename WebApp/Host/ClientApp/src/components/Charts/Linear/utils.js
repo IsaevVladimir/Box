@@ -1,45 +1,113 @@
 ﻿import moment from 'moment';
 import round from 'lodash/round';
 import reverse from 'lodash/reverse';
+import get from 'lodash/get';
+import minBy from 'lodash/minBy';
+import maxBy from 'lodash/maxBy';
+import map from 'lodash/map';
 
-export const calcInterval = (from, to) => {
+const HORIZONTAL_POINTS_COUNT = 10;
+const VERTICAL_POINTS_COUNT = 20;
+
+const HORIZONTAL_PADDING = 60;
+const VERTICAL_PADDING = 30;
+
+const POINT_HEIGHT = 20;
+const CHART_HEIGHT = VERTICAL_POINTS_COUNT * POINT_HEIGHT + (HORIZONTAL_PADDING * 2);
+
+const calcInterval = (from, to) => {
   const unixFrom = moment(from).unix();
   const unixTo = moment(to).unix();
   const unixInterval = unixTo - unixFrom;
-  return { unixFrom, unixTo, unixInterval };
+  return {unixFrom, unixTo, unixInterval};
 }
-export const calcPoints = (from, to, count) => {
-  const { unixFrom, unixTo, unixInterval } = calcInterval(from, to);
-  const unixIntervalOffset = round(unixInterval / (count - 1));
+const calcHorizontalPoints = (from, to, width, height) => {
+  const {unixFrom, unixTo, unixInterval} = calcInterval(from, to);
+  const unixIntervalOffset = round(unixInterval / (HORIZONTAL_POINTS_COUNT - 1));
 
   const intervals = [unixFrom];
-  for (let i = 1; i <= count - 2; i += 1) {
+  for (let i = 1; i <= HORIZONTAL_POINTS_COUNT - 2; i += 1) {
     intervals.push(unixFrom + unixIntervalOffset * i);
   }
   intervals.push(unixTo);
+
+  const lineOffset = (height - (VERTICAL_PADDING * 2)) / (intervals.length - 1);
 
   // если интервал более суток - выводим дату и время
   // LT - 11:21 AM
   // lll - Feb 13, 2020 11:21 AM
   const momentFormat = unixInterval > 86400 ? 'lll' : 'LT';
-
-  return intervals.map(e => ({
-    time: e,
+  return reverse(intervals).map((e, index) => ({
+    x1: HORIZONTAL_PADDING,
+    y1: lineOffset * index + VERTICAL_PADDING,
+    x2: width - HORIZONTAL_PADDING,
+    y2: lineOffset * index + VERTICAL_PADDING,
+    x: 0,
+    y: lineOffset * index + VERTICAL_PADDING + 4,
     text: moment
       .unix(e)
       .format(momentFormat),
   }));
 }
-
-export const calcSections = (min, max, count) => {
+const calcVerticalPoints = (min, max, width, height) => {
   const interval = max - min;
-  const intervalOffset = round(interval / (count - 1));
+  const intervalOffset = round(interval / (VERTICAL_POINTS_COUNT - 1));
 
   const intervals = [min];
-  for (let i = 1; i <= count - 2; i += 1) {
+  for (let i = 1; i <= VERTICAL_POINTS_COUNT - 2; i += 1) {
     intervals.push(min + intervalOffset * i);
   }
   intervals.push(max);
 
-  return reverse(intervals);
+  const lineOffset = (width - (HORIZONTAL_PADDING * 2)) / (intervals.length - 1);
+
+  return intervals.map((e, index) => ({
+    x1: lineOffset * index + HORIZONTAL_PADDING,
+    y1: VERTICAL_PADDING,
+    x2: lineOffset * index + HORIZONTAL_PADDING,
+    y2: height - VERTICAL_PADDING,
+    x: lineOffset * index + HORIZONTAL_PADDING,
+    y: CHART_HEIGHT,
+    text: e,
+  }));
+};
+
+const calcSeries = (dataSource, width, height) => {
+  const from = get(minBy(dataSource, x => x.dt), 'dt', moment());
+  const to = get(maxBy(dataSource, x => x.dt), 'dt', moment());
+  const min = get(minBy(dataSource, x => x.value), 'value', 0);
+  const max = get(maxBy(dataSource, x => x.value), 'value', 10);
+
+  const horizontalIntervalOffset = height / (moment(to).unix() - moment(from).unix());
+  const verticalIntervalOffset = width / (max - min);
+
+  return map(dataSource, (e) => {
+    const avgX = (verticalIntervalOffset * (e.value - min));
+    const avgY = (horizontalIntervalOffset * (moment(e.dt).unix() - moment(from).unix()));
+
+    return {
+      x1: avgX + HORIZONTAL_PADDING,
+      y1: avgY + VERTICAL_PADDING,
+      x2: avgX + HORIZONTAL_PADDING + POINT_HEIGHT,
+      y2: avgY + VERTICAL_PADDING + POINT_HEIGHT
+    }
+  })
+};
+
+export const normalizeProps = (dataSource, width, height) => {
+  const from = get(minBy(dataSource, x => x.dt), 'dt', moment());
+  const to = get(maxBy(dataSource, x => x.dt), 'dt', moment());
+
+  const min = get(minBy(dataSource, x => x.value), 'value', 0);
+  const max = get(maxBy(dataSource, x => x.value), 'value', 10);
+
+  const verticalPoints = calcVerticalPoints(min, max, width, height);
+  const horizontalPoints = calcHorizontalPoints(from, to, width, height);
+  const series = calcSeries(dataSource, width, height);
+  return {
+    horizontalPoints,
+    verticalPoints,
+    series,
+    height: CHART_HEIGHT
+  };
 };
