@@ -5,15 +5,16 @@ import get from 'lodash/get';
 import minBy from 'lodash/minBy';
 import maxBy from 'lodash/maxBy';
 import map from 'lodash/map';
+import orderBy from 'lodash/orderBy';
 
-const HORIZONTAL_POINTS_COUNT = 10;
-const VERTICAL_POINTS_COUNT = 20;
+const HORIZONTAL_POINTS_COUNT = 15;
+const VERTICAL_POINTS_COUNT = 10;
 
-const HORIZONTAL_PADDING = 60;
+const HORIZONTAL_PADDING = 30;
 const VERTICAL_PADDING = 30;
 
 const POINT_HEIGHT = 20;
-const CHART_HEIGHT = VERTICAL_POINTS_COUNT * POINT_HEIGHT + (HORIZONTAL_PADDING * 2);
+const CHART_HEIGHT = VERTICAL_POINTS_COUNT * POINT_HEIGHT + (VERTICAL_PADDING * 2);
 
 const calcInterval = (from, to) => {
   const unixFrom = moment(from).unix();
@@ -31,22 +32,22 @@ const calcHorizontalPoints = (from, to, width, height) => {
   }
   intervals.push(unixTo);
 
-  const lineOffset = (height - (VERTICAL_PADDING * 2)) / (intervals.length - 1);
+  const lineOffset = (width - (HORIZONTAL_PADDING * 2)) / (intervals.length - 1);
 
   // если интервал более суток - выводим дату и время
   // LT - 11:21 AM
   // lll - Feb 13, 2020 11:21 AM
   const momentFormat = unixInterval > 86400 ? 'lll' : 'LT';
-  return reverse(intervals).map((e, index) => ({
-    x1: HORIZONTAL_PADDING,
-    y1: lineOffset * index + VERTICAL_PADDING,
-    x2: width - HORIZONTAL_PADDING,
-    y2: lineOffset * index + VERTICAL_PADDING,
-    x: 0,
-    y: lineOffset * index + VERTICAL_PADDING + 4,
+  return intervals.map((e, index) => ({
+    x1: lineOffset * index + HORIZONTAL_PADDING,
+    y1: VERTICAL_PADDING,
+    x2: lineOffset * index + HORIZONTAL_PADDING,
+    y2: height - VERTICAL_PADDING,
+    x: lineOffset * index + HORIZONTAL_PADDING,
+    y: CHART_HEIGHT,
     text: moment
       .unix(e)
-      .format(momentFormat),
+      .format(momentFormat)
   }));
 }
 const calcVerticalPoints = (min, max, width, height) => {
@@ -59,18 +60,30 @@ const calcVerticalPoints = (min, max, width, height) => {
   }
   intervals.push(max);
 
-  const lineOffset = (width - (HORIZONTAL_PADDING * 2)) / (intervals.length - 1);
-
-  return intervals.map((e, index) => ({
-    x1: lineOffset * index + HORIZONTAL_PADDING,
-    y1: VERTICAL_PADDING,
-    x2: lineOffset * index + HORIZONTAL_PADDING,
-    y2: height - VERTICAL_PADDING,
-    x: lineOffset * index + HORIZONTAL_PADDING,
-    y: CHART_HEIGHT,
-    text: e,
+  const lineOffset = (height - (VERTICAL_PADDING * 2)) / (intervals.length - 1);
+  return reverse(intervals).map((e, index) => ({
+    x1: HORIZONTAL_PADDING,
+    y1: lineOffset * index + VERTICAL_PADDING,
+    x2: width - HORIZONTAL_PADDING,
+    y2: lineOffset * index + VERTICAL_PADDING,
+    x: 0,
+    y: lineOffset * index + VERTICAL_PADDING + 4,
+    text: e
   }));
 };
+
+const normalizeSeries = (series) => {
+  return map(series, (s, i) => {
+      if (i !== series.length - 1) {
+        const nextSeries = series[i + 1];
+        s.x2 = nextSeries.x1;
+        s.y2 = nextSeries.y1;
+        return s;
+      }
+      return s;
+    }
+  );
+}
 
 const calcSeries = (dataSource, width, height) => {
   const from = get(minBy(dataSource, x => x.dt), 'dt', moment());
@@ -78,20 +91,24 @@ const calcSeries = (dataSource, width, height) => {
   const min = get(minBy(dataSource, x => x.value), 'value', 0);
   const max = get(maxBy(dataSource, x => x.value), 'value', 10);
 
-  const horizontalIntervalOffset = height / (moment(to).unix() - moment(from).unix());
-  const verticalIntervalOffset = width / (max - min);
+  const verticalIntervalOffset = (height - (VERTICAL_PADDING * 2)) / (max - min);
+  const horizontalIntervalOffset = (width - (HORIZONTAL_PADDING * 2)) / (moment(to).unix() - moment(from).unix());
 
-  return map(dataSource, (e) => {
-    const avgX = (verticalIntervalOffset * (e.value - min));
-    const avgY = (horizontalIntervalOffset * (moment(e.dt).unix() - moment(from).unix()));
+  const orderedDataSource = orderBy(dataSource, [x => moment(x.dt).unix()], ['asc'])
+
+  const rawSeries = map(orderedDataSource, (e) => {
+    const avgX = (horizontalIntervalOffset * (moment(e.dt).unix() - moment(from).unix())) + HORIZONTAL_PADDING;
+    const avgY = height - (verticalIntervalOffset * (e.value - min)) - VERTICAL_PADDING;
 
     return {
-      x1: avgX + HORIZONTAL_PADDING,
-      y1: avgY + VERTICAL_PADDING,
-      x2: avgX + HORIZONTAL_PADDING + POINT_HEIGHT,
-      y2: avgY + VERTICAL_PADDING + POINT_HEIGHT
+      x1: avgX,
+      y1: avgY,
+      x2: avgX,
+      y2: avgY
     }
-  })
+  });
+
+  return normalizeSeries(rawSeries);
 };
 
 export const normalizeProps = (dataSource, width, height) => {
@@ -104,10 +121,5 @@ export const normalizeProps = (dataSource, width, height) => {
   const verticalPoints = calcVerticalPoints(min, max, width, height);
   const horizontalPoints = calcHorizontalPoints(from, to, width, height);
   const series = calcSeries(dataSource, width, height);
-  return {
-    horizontalPoints,
-    verticalPoints,
-    series,
-    height: CHART_HEIGHT
-  };
+  return { horizontalPoints, verticalPoints, series, height: CHART_HEIGHT };
 };

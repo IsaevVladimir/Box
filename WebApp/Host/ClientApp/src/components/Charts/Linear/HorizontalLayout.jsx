@@ -24,6 +24,7 @@ export default () => {
         return (
           <text
             key={index.toString(36)}
+            textAnchor='middle'
             x={line.x}
             y={line.y}
             fill='#000'
