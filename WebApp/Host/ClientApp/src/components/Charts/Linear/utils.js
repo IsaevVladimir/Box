@@ -6,6 +6,7 @@ import minBy from 'lodash/minBy';
 import maxBy from 'lodash/maxBy';
 import map from 'lodash/map';
 import orderBy from 'lodash/orderBy';
+import forEach from 'lodash/forEach';
 
 const HORIZONTAL_POINTS_COUNT = 15;
 const VERTICAL_POINTS_COUNT = 10;
@@ -85,41 +86,41 @@ const normalizeSeries = (series) => {
   );
 }
 
-const calcSeries = (dataSource, width, height) => {
-  const from = get(minBy(dataSource, x => x.dt), 'dt', moment());
-  const to = get(maxBy(dataSource, x => x.dt), 'dt', moment());
-  const min = get(minBy(dataSource, x => x.value), 'value', 0);
-  const max = get(maxBy(dataSource, x => x.value), 'value', 10);
-
+const calcSeries = (dataSource, width, height, max, min, from, to) => {
   const verticalIntervalOffset = (height - (VERTICAL_PADDING * 2)) / (max - min);
   const horizontalIntervalOffset = (width - (HORIZONTAL_PADDING * 2)) / (moment(to).unix() - moment(from).unix());
 
-  const orderedDataSource = orderBy(dataSource, [x => moment(x.dt).unix()], ['asc'])
-
-  const rawSeries = map(orderedDataSource, (e) => {
-    const avgX = (horizontalIntervalOffset * (moment(e.dt).unix() - moment(from).unix())) + HORIZONTAL_PADDING;
-    const avgY = height - (verticalIntervalOffset * (e.value - min)) - VERTICAL_PADDING;
-
+  return map(dataSource, sourceItem => {
+    const orderedSeries = orderBy(sourceItem.series, [x => moment(x.dt).unix()], ['asc'])
+    const rawSeries = map(orderedSeries, (e) => {
+      const avgX = (horizontalIntervalOffset * (moment(e.dt).unix() - moment(from).unix())) + HORIZONTAL_PADDING;
+      const avgY = height - (verticalIntervalOffset * (e.value - min)) - VERTICAL_PADDING;
+      return { x1: avgX, y1: avgY, x2: avgX, y2: avgY }
+    });
     return {
-      x1: avgX,
-      y1: avgY,
-      x2: avgX,
-      y2: avgY
-    }
-  });
-
-  return normalizeSeries(rawSeries);
+      series: normalizeSeries(rawSeries),
+      color: sourceItem.color,
+      name: sourceItem.name,
+      id: sourceItem.id
+    };
+  })
 };
 
 export const normalizeProps = (dataSource, width, height) => {
-  const from = get(minBy(dataSource, x => x.dt), 'dt', moment());
-  const to = get(maxBy(dataSource, x => x.dt), 'dt', moment());
+  const dtValues = [];
+  const values = [];
+  forEach(dataSource, x => {
+    dtValues.push(...map(get(x, 'series', []), c => c.dt));
+    values.push(...map(get(x, 'series', []), c => c.value));
+  })
 
-  const min = get(minBy(dataSource, x => x.value), 'value', 0);
-  const max = get(maxBy(dataSource, x => x.value), 'value', 10);
+  const from = minBy(dtValues);
+  const to = maxBy(dtValues);
+  const min = minBy(values);
+  const max = maxBy(values);
 
   const verticalPoints = calcVerticalPoints(min, max, width, height);
   const horizontalPoints = calcHorizontalPoints(from, to, width, height);
-  const series = calcSeries(dataSource, width, height);
-  return { horizontalPoints, verticalPoints, series, height: CHART_HEIGHT };
+  const calculatedSeries = calcSeries(dataSource, width, height, max, min, from, to);
+  return { horizontalPoints, verticalPoints, dataSource: calculatedSeries, height: CHART_HEIGHT };
 };
