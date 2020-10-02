@@ -9,6 +9,7 @@ import user from './models/user'
 import check from './models/check'
 import checkCategory from './models/checkCategory'
 import setting from './models/setting'
+import table from './models/table'
 
 import './index.less';
 
@@ -36,6 +37,7 @@ app.model(user);
 app.model(check);
 app.model(checkCategory);
 app.model(setting);
+app.model(table);
 
 // 4. Router
 app.router(require('./router.jsx'));

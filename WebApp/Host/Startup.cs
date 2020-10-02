@@ -8,8 +8,10 @@ using Microsoft.Extensions.DependencyInjection;
 using Microsoft.Extensions.Hosting;
 using WebApp.DataAccess;
 using WebApp.DataAccess.Repositories;
+using WebApp.Host.Hubs;
 using WebApp.Host.Services.FinanceService;
 using WebApp.Host.Services.FinanceService.Implementations;
+using WebApp.Host.Services.TableService;
 using WebApp.Host.Services.UserService;
 
 namespace WebApp.Host
@@ -30,12 +32,16 @@ namespace WebApp.Host
             services.AddDbContext<CustomDbContext>(options => 
                 options.UseNpgsql(_configuration.GetSection("DataBase:ConnectionString").Value));
 
+            services.AddSignalR();
+            
             services.AddScoped<UserRepository>();
             services.AddScoped<CheckRepository>();
             services.AddScoped<CheckCategoryRepository>();
+            services.AddScoped<TableCellRepository>();
             
             services.AddScoped<IUserService, UserService>();
             services.AddScoped<IFinanceService, FinanceService>();
+            services.AddScoped<ITableService, TableService>();
         }
 
         public void Configure(IApplicationBuilder app, IWebHostEnvironment env)
@@ -54,11 +60,10 @@ namespace WebApp.Host
             app.UseRouting();
             app.UseEndpoints(endpoints =>
             {
-                endpoints.MapControllerRoute(
-                    name: "default",
-                    pattern: "{controller}/{id?}");
+                endpoints.MapControllerRoute("default", "{controller}/{id?}");
+                endpoints.MapHub<TableHub>("/tablehub");
             });
-
+            
             app.UseSpa(spa =>
             {
                 spa.Options.SourcePath = "ClientApp";
@@ -68,7 +73,7 @@ namespace WebApp.Host
                 }
             });
 
-            // InitializeDatabase(app);
+            InitializeDatabase(app);
         }
         
         private void InitializeDatabase(IApplicationBuilder app)

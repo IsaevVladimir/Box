@@ -20,10 +20,13 @@ function Header({
         defaultSelectedKeys={[location.pathname]}
       >
         <Menu.Item key="/Dashboard">
-          <Link to="/Dashboard"><Icon type="dashboard" />Dashboard</Link>
+          <Link to="/Dashboard"><Icon type="line-chart" />Line chart (svg)</Link>
         </Menu.Item>
         <Menu.Item key="/Check">
-          <Link to="/Check"><Icon type="home" />Checks</Link>
+          <Link to="/Check"><Icon type="environment" />Checks (YandexMap, Form)</Link>
+        </Menu.Item>
+        <Menu.Item key="/Table">
+          <Link to="/Table"><Icon type="table" />Multiplayer Table (SignalR)</Link>
         </Menu.Item>
       </Menu>
     </header>

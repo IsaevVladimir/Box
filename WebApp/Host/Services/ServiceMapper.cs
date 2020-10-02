@@ -5,6 +5,7 @@ using AutoMapper.Configuration;
 using WebApp.Common;
 using WebApp.DataAccess.DataModels;
 using WebApp.Host.Services.FinanceService.Models;
+using WebApp.Host.Services.TableService.Models;
 using WebApp.Host.Services.UserService.Models;
 
 namespace WebApp.Host.Services
@@ -35,11 +36,13 @@ namespace WebApp.Host.Services
         private void InitializeMapper(MapperConfigurationExpression config)
         {
             #region user service
+            
             config.CreateMap<UserDm, UserDto>();
             config.CreateMap<RegistrationDto, UserDm>()
                 .ForMember(d => d.PasswordHash, 
                     s =>
                         s.MapFrom(x => PasswordHelper.Encrypt(x.Password)));
+            
             #endregion
             
             #region finance service
@@ -58,6 +61,12 @@ namespace WebApp.Host.Services
                         (z.Coordinates == null || !z.Coordinates.Any() ? default(double?) : z.Coordinates.LastOrDefault())));
             
             config.CreateMap<CheckCategoryDm, CheckCategoryDto>().ReverseMap();
+            #endregion
+
+            #region table service
+
+            config.CreateMap<TableCellDm, CellDto>().ReverseMap();
+
             #endregion
         }
     }

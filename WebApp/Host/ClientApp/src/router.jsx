@@ -10,6 +10,7 @@ function RouterConfig({
 }) {
   const Dashboard = Dynamic({ app, component: () => import('./pages/dashboard/index') });
   const Check = Dynamic({ app, component: () => import('./pages/check/index') });
+  const Table = Dynamic({ app, component: () => import('./pages/table/index') });
 
   return (
     <Router history={history}>
@@ -17,6 +18,7 @@ function RouterConfig({
         <Redirect exact from="/" to="/Dashboard" />
         <Route exact path="/Dashboard" component={Dashboard} />
         <Route exact path="/Check" component={Check} />
+        <Route exact path="/Table" component={Table} />
       </Switch>
     </Router>
   );
