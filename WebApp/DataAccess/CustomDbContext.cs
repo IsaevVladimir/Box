@@ -13,5 +13,6 @@ namespace WebApp.DataAccess
         public DbSet<User> Users { get; set; }
         public DbSet<Check> Checks { get; set; }
         public DbSet<CheckCategory> CheckCategories { get; set; }
+        public DbSet<TableCell> TableCells { get; set; }
     }
 }
