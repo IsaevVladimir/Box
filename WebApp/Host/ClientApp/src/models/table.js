@@ -6,7 +6,6 @@ import map from 'lodash/map'
 import filter from 'lodash/filter'
 import isBoolean from 'lodash/isBoolean'
 import isObject from 'lodash/isObject'
-import noop from 'lodash/noop';
 import isNil from 'lodash/isNil';
 import forEach from 'lodash/forEach';
 
@@ -34,16 +33,16 @@ export default {
       const connection = yield select(state => state.table.connection);
       const response = yield call(getRowList, connection);
       if (isArray(response)) {
+        for (let i = 0; i < response.length; i++) {
+          yield put({ type: 'fetchCellList', payload: get(response, `[${i}].id`)});
+        }
         yield put({type: 'saveRows', payload: response});
-        forEach(response, ({id}) => {
-          put({ type: 'fetchCellList', payload: id});
-        })
       }
     },
 
-    *fetchCellList({rowId}, {call, put, select}) {
+    *fetchCellList({ payload }, {call, put, select}) {
       const connection = yield select(state => state.table.connection);
-      const response = yield call(getCellList, connection, rowId);
+      const response = yield call(getCellList, { connection, rowId: payload });
       if (isArray(response)) {
         yield put({type: 'saveCells', payload: response});
       }
@@ -108,7 +107,7 @@ export default {
     },
 
     saveCells(state, action) {
-      return {...state, cells: [...state.cells, action.payload]};
+      return {...state, cells: [...state.cells, ...action.payload]};
     },
     insertIntoCellList(state, action) {
       return {...state, cells: [...state.list, action.payload]};

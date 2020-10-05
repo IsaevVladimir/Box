@@ -30,14 +30,13 @@ namespace WebApp.DataAccess
 
         private void InitializeMapper(MapperConfigurationExpression config)
         {
-            config.CreateMap<User, UserDm>();
-            config.CreateMap<UserDm, User>();
+            config.CreateMap<User, UserDm>().ReverseMap();
             
-            config.CreateMap<Check, CheckDm>();
-            config.CreateMap<CheckDm, Check>();
+            config.CreateMap<Check, CheckDm>().ReverseMap();
             
-            config.CreateMap<CheckCategory, CheckCategoryDm>();
-            config.CreateMap<CheckCategoryDm, CheckCategory>();
+            config.CreateMap<CheckCategory, CheckCategoryDm>().ReverseMap();
+            
+            config.CreateMap<TableCell, TableCellDm>().ReverseMap();
         }
     }
 }

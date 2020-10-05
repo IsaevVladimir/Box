@@ -17,10 +17,13 @@ namespace WebApp.Host.Hubs
         public async Task<List<RowDto>> GetRowList()
         {
             return await _tableService.GetRowList(1);
-        } 
+        }
 
 
-        public async Task GetCellList(int rowId) => await _tableService.GetCellList(1, rowId);
+        public async Task<List<CellDto>> GetCellList(int rowId = 0)
+        {
+            return await _tableService.GetCellList(1, rowId);
+        }
         public async Task AddCell(CellDto cell)
         {
             var addedCell = await _tableService.AddCell(1, cell);

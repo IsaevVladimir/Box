@@ -1,11 +1,18 @@
 ﻿import {HubConnectionBuilder} from '@microsoft/signalr';
 import noop from 'lodash/noop';
+import isNil from 'lodash/isNil';
+import isEmpty from 'lodash/isEmpty';
 
 const actionWrapper = async (connection, action, props = {}) => {
   if (connection.connectionStarted) {
     try {
-      return await connection.invoke(action, ...props);
+      if (isNil(props) || isEmpty(props)) {
+        return await connection.invoke(action);
+      } else {
+        return await connection.invoke(action, ...Object.values(props));
+      }
     } catch (e) {
+      console.log('e', e);
       noop(e);
     }
   }
@@ -20,7 +27,7 @@ export async function getRowList(connection) {
 }
 
 
-export async function getCellList(connection, rowId) {
+export async function getCellList({ connection, rowId }) {
   return await actionWrapper(connection, 'GetCellList', { rowId });
 }
 export async function addCell(connection, cell) {
