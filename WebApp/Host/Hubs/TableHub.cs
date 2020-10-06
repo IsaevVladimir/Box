@@ -18,32 +18,59 @@ namespace WebApp.Host.Hubs
         {
             return await _tableService.GetRowList(1);
         }
-
+        public async Task<RowDto> AddRow(RowDto row)
+        {
+            var addedRow = await _tableService.AddRow(1, row);
+            if (addedRow is null)
+                return null;
+            Clients.Others.SendAsync("AddRow", addedRow);
+            return addedRow;
+        }
+        public async Task<RowDto> UpdateRow(RowDto row)
+        {
+            var updatedRow = await _tableService.UpdateRow(1, row);
+            if (updatedRow is null)
+                return null;
+            Clients.Others.SendAsync("UpdateRow", updatedRow);
+            return updatedRow;
+        }
+        public async Task<bool> RemoveRow(int id)
+        {
+            var removeSuccess = await _tableService.RemoveCell(1, id);
+            if (!removeSuccess)
+                return false;
+            Clients.Others.SendAsync("RemoveCell", id);
+            return true;
+        }
 
         public async Task<List<CellDto>> GetCellList(int rowId = 0)
         {
             return await _tableService.GetCellList(1, rowId);
         }
-        public async Task AddCell(CellDto cell)
+        public async Task<CellDto> AddCell(CellDto cell)
         {
             var addedCell = await _tableService.AddCell(1, cell);
             if (addedCell is null)
-                return;
-            await Clients.All.SendAsync("AddCell", addedCell);
+                return null;
+            Clients.Others.SendAsync("AddCell", addedCell);
+            return addedCell;
         }
-        public async Task UpdateCell(CellDto cell)
+        public async Task<CellDto> UpdateCell(CellDto cell)
         {
             var updatedCell = await _tableService.UpdateCell(1, cell);
             if (updatedCell is null)
-                return;
-            await Clients.All.SendAsync("UpdateCell", updatedCell);
+                return null;
+            Clients.Others.SendAsync("UpdateCell", updatedCell);
+            return updatedCell;
         }
-        public async Task RemoveCell(int id)
+        public async Task<bool> RemoveCell(int id)
         {
             var removeSuccess = await _tableService.RemoveCell(1, id);
-            if (removeSuccess)
-                return;
-            await Clients.All.SendAsync("RemoveCell", id);
+            if (!removeSuccess)
+                return false;
+            
+            Clients.Others.SendAsync("RemoveCell", id);
+            return true;
         }
     }
 }

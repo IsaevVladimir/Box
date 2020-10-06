@@ -7,12 +7,15 @@ namespace WebApp.DataAccess
     {
         public CustomDbContext(DbContextOptions<CustomDbContext> options) : base(options) { }
         
-        //protected override void OnConfiguring(DbContextOptionsBuilder optionsBuilder)
-        //     => optionsBuilder.UseNpgsql("Host=my_host;Database=my_db;Username=my_user;Password=my_pw");
+        // protected override void OnConfiguring(DbContextOptionsBuilder optionsBuilder)
+        //      => optionsBuilder.UseNpgsql("Host=my_host;Database=my_db;Username=my_user;Password=my_pw");
         
         public DbSet<User> Users { get; set; }
+        
         public DbSet<Check> Checks { get; set; }
         public DbSet<CheckCategory> CheckCategories { get; set; }
+        
         public DbSet<TableCell> TableCells { get; set; }
+        public DbSet<TableRow> TableRows { get; set; }
     }
 }

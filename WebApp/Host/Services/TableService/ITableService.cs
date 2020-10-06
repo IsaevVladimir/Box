@@ -8,6 +8,9 @@ namespace WebApp.Host.Services.TableService
     {
         public Task<List<RowDto>> GetRowList(int userId);
         public Task<RowDto> GetRow(int userId, int rowId);
+        public Task<RowDto> AddRow(int userId, RowDto row);
+        public Task<RowDto> UpdateRow(int userId, RowDto row);
+        public Task<bool> RemoveRow(int userId, int id);
         
         /// <summary>
         /// Ленивая построчная подрузка ячеек

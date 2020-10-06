@@ -4,6 +4,7 @@
     {
         public int Id { get; set; }
         public int RowId { get; set; }
+        public int Number { get; set; }
         public string Value { get; set; }
         
         /// <summary>

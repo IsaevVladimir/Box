@@ -7,9 +7,9 @@ import filter from 'lodash/filter'
 import isBoolean from 'lodash/isBoolean'
 import isObject from 'lodash/isObject'
 import isNil from 'lodash/isNil';
-import forEach from 'lodash/forEach';
+import uniqBy from 'lodash/uniqBy';
 
-import {connect, getRowList, getCellList, addCell, updateCell, removeCell} from '../services/table'
+import {connect, getRowList, addRow, updateRow, removeRow, getCellList, addCell, updateCell, removeCell} from '../services/table'
 
 export default {
   namespace: 'table',
@@ -39,6 +39,27 @@ export default {
         yield put({type: 'saveRows', payload: response});
       }
     },
+    *addRow({payload}, {call, put, select}) {
+      const connection = yield select(state => state.table.connection);
+      const response = yield call(addRow, connection, payload);
+      if (hasIn(response, 'id')) {
+        yield put({type: 'insertIntoRowList', payload: response});
+      }
+    },
+    *updateRow({payload}, {call, put, select}) {
+      const connection = yield select(state => state.table.connection);
+      const response = yield call(updateRow, connection, payload);
+      if (hasIn(response, 'id')) {
+        yield put({type: 'updateInRowList', payload: response});
+      }
+    },
+    *removeRow({payload}, {call, put, select}) {
+      const connection = yield select(state => state.table.connection);
+      const response = yield call(removeRow, connection, payload);
+      if (isBoolean(response) && response) {
+        yield put({type: 'removeFromRowList', payload: payload});
+      }
+    },
 
     *fetchCellList({ payload }, {call, put, select}) {
       const connection = yield select(state => state.table.connection);
@@ -47,44 +68,47 @@ export default {
         yield put({type: 'saveCells', payload: response});
       }
     },
-    *addCell({cell}, {call, put, select}) {
+    *addCell({payload}, {call, put, select}) {
       const connection = yield select(state => state.table.connection);
-      const response = yield call(addCell, connection, cell);
+      const response = yield call(addCell, connection, payload);
       if (hasIn(response, 'id')) {
         yield put({type: 'insertIntoCellList', payload: response});
       }
     },
-    *updateCell({cell}, {call, put, select}) {
+    *updateCell({payload}, {call, put, select}) {
       const connection = yield select(state => state.table.connection);
-      const response = yield call(updateCell, connection, cell);
+      const response = yield call(updateCell, connection, payload);
       if (hasIn(response, 'id')) {
         yield put({type: 'updateInCellList', payload: response});
       }
     },
-    *removeCell({id}, {call, put, select}) {
+    *removeCell({payload}, {call, put, select}) {
       const connection = yield select(state => state.table.connection);
-      const response = yield call(removeCell, connection, id);
+      const response = yield call(removeCell, connection, payload);
       if (isBoolean(response) && response) {
-        yield put({type: 'removeFromCellList', payload: id});
+        yield put({type: 'removeFromCellList', payload: payload});
       }
     },
 
 
-    *addRowFromSub({row}, {put}) {
-      yield put({type: 'insertIntoRowList', payload: row});
+    *addRowFromSub({payload}, {put}) {
+      yield put({type: 'insertIntoRowList', payload: payload});
     },
-    *removeRowFromSub({id}, {put}) {
-      yield put({type: 'removeFromRowList', payload: id});
+    *updateRowFromSub({payload}, {put}) {
+      yield put({type: 'updateInRowList', payload: payload});
+    },
+    *removeRowFromSub({payload}, {put}) {
+      yield put({type: 'removeFromRowList', payload: payload});
     },
 
-    *addCellFromSub({cell}, {put}) {
-      yield put({type: 'insertIntoCellList', payload: cell});
+    *addCellFromSub({payload}, {put}) {
+      yield put({type: 'insertIntoCellList', payload: payload});
     },
-    *updateCellFromSub({cell}, {put}) {
-      yield put({type: 'updateInCellList', payload: cell});
+    *updateCellFromSub({payload}, {put}) {
+      yield put({type: 'updateInCellList', payload: payload});
     },
-    *removeCellFromSub({id}, {put}) {
-      yield put({type: 'removeFromCellList', payload: id});
+    *removeCellFromSub({payload}, {put}) {
+      yield put({type: 'removeFromCellList', payload: payload});
     },
   },
 
@@ -97,25 +121,37 @@ export default {
       return {...state, rows: action.payload};
     },
     insertIntoRowList(state, action) {
-      return {...state, rows: [...state.list, action.payload]};
+      return {...state, rows: [...state.rows, action.payload]};
+    },
+    updateInRowList(state, action) {
+      return {
+        ...state,
+        rows: map(state.rows,
+          x => {
+            if (eq(get(x, 'id'), get(action, 'payload.id'))) {
+              return action.payload;
+            }
+            return x;
+          })
+      };
     },
     removeFromRowList(state, action) {
       return {
         ...state,
-        rows: filter(state.list, x => !eq(get(x, 'id'), get(action, 'payload')))
+        rows: filter(state.rows, x => !eq(get(x, 'id'), get(action, 'payload')))
       };
     },
 
     saveCells(state, action) {
-      return {...state, cells: [...state.cells, ...action.payload]};
+      return {...state, cells: uniqBy([...state.cells, ...action.payload], x => x.id)};
     },
     insertIntoCellList(state, action) {
-      return {...state, cells: [...state.list, action.payload]};
+      return {...state, cells: [...state.cells, action.payload]};
     },
     updateInCellList(state, action) {
       return {
         ...state,
-        cells: map(state.list,
+        cells: map(state.cells,
           x => {
             if (eq(get(x, 'id'), get(action, 'payload.id'))) {
               return action.payload;
@@ -127,7 +163,7 @@ export default {
     removeFromCellList(state, action) {
       return {
         ...state,
-        cells: filter(state.list, x => !eq(get(x, 'id'), get(action, 'payload')))
+        cells: filter(state.cells, x => !eq(get(x, 'id'), get(action, 'payload')))
       };
     }
   },
@@ -148,6 +184,9 @@ export default {
                 connect.on('AddRow', row => {
                   dispatch({type: 'addRowFromSub', payload: row});
                 });
+                connect.on('UpdateRow', row => {
+                  dispatch({type: 'updateRowFromSub', payload: row});
+                });
                 connect.on('RemoveRow', id => {
                   dispatch({type: 'removeRowFromSub', payload: id});
                 });
@@ -162,7 +201,7 @@ export default {
                   dispatch({type: 'removeCellFromSub', payload: id});
                 });
               })
-              .catch(e => console.log('connection error 2', e));
+              .catch(e => console.log('connection error', e));
           }).catch(e => console.log('connection error', e))
         }
       });

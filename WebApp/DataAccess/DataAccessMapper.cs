@@ -33,10 +33,10 @@ namespace WebApp.DataAccess
             config.CreateMap<User, UserDm>().ReverseMap();
             
             config.CreateMap<Check, CheckDm>().ReverseMap();
-            
             config.CreateMap<CheckCategory, CheckCategoryDm>().ReverseMap();
             
             config.CreateMap<TableCell, TableCellDm>().ReverseMap();
+            config.CreateMap<TableRow, TableRowDm>().ReverseMap();
         }
     }
 }

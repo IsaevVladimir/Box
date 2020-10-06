@@ -66,6 +66,7 @@ namespace WebApp.Host.Services
             #region table service
 
             config.CreateMap<TableCellDm, CellDto>().ReverseMap();
+            config.CreateMap<TableRowDm, RowDto>().ReverseMap();
 
             #endregion
         }

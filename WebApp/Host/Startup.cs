@@ -38,6 +38,7 @@ namespace WebApp.Host
             services.AddScoped<CheckRepository>();
             services.AddScoped<CheckCategoryRepository>();
             services.AddScoped<TableCellRepository>();
+            services.AddScoped<TableRowRepository>();
             
             services.AddScoped<IUserService, UserService>();
             services.AddScoped<IFinanceService, FinanceService>();

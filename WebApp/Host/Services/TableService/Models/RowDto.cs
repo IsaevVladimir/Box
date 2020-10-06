@@ -4,6 +4,8 @@
     {
         public int Id { get; set; }
         
+        public int Number { get; set; }
+        
         /// <summary>
         /// Имеются не пустые ячейки, т.к. пустые ячейки не будут храниться
         /// </summary>

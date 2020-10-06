@@ -1,6 +1,4 @@
-﻿import React, { cloneElement } from 'react';
-import { Form } from 'antd';
-import isArray from 'lodash/isArray';
+﻿import React from 'react';
 
 import NormalizeForm from '../NormalizeForm/NormalizeForm';
 import styles from './FilterWrapper.less'
