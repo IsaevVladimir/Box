@@ -1,14 +1,16 @@
 ﻿import React, { useMemo } from 'react';
 import {connect} from 'dva';
 import {Table} from 'antd';
+import has from 'lodash/has';
+import isNumber from 'lodash/isNumber';
 
 import EditableCell from './components/EditableCell'
 
 import { normalizeDataProps } from './utils'
 
-const MultiplayerTable = ({ rows, cells, addRow, addCell }) => {
+const MultiplayerTable = ({ rows, cells, updateRow, updateCell }) => {
   const { columns, ...dataProps } = useMemo(() => {
-    return normalizeDataProps(rows, cells, addRow, addCell);
+    return normalizeDataProps(rows, cells, updateRow, updateCell);
   }, [rows, cells]);
 
   const cols = columns.map(col => {
@@ -22,9 +24,7 @@ const MultiplayerTable = ({ rows, cells, addRow, addCell }) => {
         editable: col.editable,
         dataIndex: col.dataIndex,
         title: col.title,
-        handleSave: (cell) => {
-          console.log('handleSave', cell);
-        },
+        handleSave: updateCell,
       }),
     };
   });
@@ -42,6 +42,19 @@ export default connect(({ table }) => ({
   rows: table.rows,
   cells: table.cells
 }), dispatch => ({
-  addRow: row => dispatch({type: 'table/addRow', payload: row}),
-  addCell: cell => dispatch({type: 'table/addCell', payload: cell}),
+  updateRow: row => {
+    if (has(row, 'id') && isNumber(row.id)) {
+      dispatch({type: 'table/updateRow', payload: row})
+    } else {
+      dispatch({type: 'table/addRow', payload: row})
+    }
+  },
+  updateCell: cell => {
+    console.log('cell', cell);
+    if (has(cell, 'id') && isNumber(cell.id)) {
+      dispatch({type: 'table/updateCell', payload: cell})
+    } else {
+      dispatch({type: 'table/addCell', payload: cell})
+    }
+  },
 }))(MultiplayerTable);

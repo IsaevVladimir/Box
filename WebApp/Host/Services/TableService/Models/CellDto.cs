@@ -7,9 +7,6 @@
         public int Number { get; set; }
         public string Value { get; set; }
         
-        /// <summary>
-        /// Блокируется, в случае если другой пользователь начал её редактирование
-        /// </summary>
-        public bool Disabled { get; set; }
+        public int? ActiveUserId { get; set; }
     }
 }

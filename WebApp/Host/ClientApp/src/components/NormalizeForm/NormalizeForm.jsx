@@ -3,11 +3,11 @@ import { Form } from 'antd'
 
 import FormContext from './FormContext';
 
-export default Form.create()(({ form, children, className }) => {
+export default Form.create()(({ form, children, ...formProps }) => {
 
   return (
     <FormContext.Provider value={form}>
-      <Form className={className}>
+      <Form {...formProps} >
         {children}
       </Form>
     </FormContext.Provider>

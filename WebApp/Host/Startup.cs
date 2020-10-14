@@ -12,6 +12,7 @@ using WebApp.Host.Hubs;
 using WebApp.Host.Services.FinanceService;
 using WebApp.Host.Services.FinanceService.Implementations;
 using WebApp.Host.Services.TableService;
+using WebApp.Host.Services.TableService.Implementations;
 using WebApp.Host.Services.UserService;
 
 namespace WebApp.Host
