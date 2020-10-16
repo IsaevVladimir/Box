@@ -6,10 +6,12 @@ import {
 } from 'antd';
 
 import user from './models/user'
-import check from './models/check'
-import checkCategory from './models/checkCategory'
+import check from './models/check/check'
+import checkCategory from './models/check/checkCategory'
 import setting from './models/setting'
-import table from './models/table'
+import tableConnection from './models/table/tableConnection'
+import row from './models/table/row'
+import cell from './models/table/cell'
 
 import './index.less';
 
@@ -33,11 +35,19 @@ const app = dva({
 // }));
 
 // 3. Model
+
 app.model(user);
+app.model(setting);
+
+// check
 app.model(check);
 app.model(checkCategory);
-app.model(setting);
-app.model(table);
+
+
+// table
+app.model(tableConnection);
+app.model(row);
+app.model(cell);
 
 // 4. Router
 app.router(require('./router.jsx'));

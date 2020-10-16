@@ -1,4 +1,4 @@
-﻿import { fetch } from '../services/checkCategory'
+﻿import { fetch } from '../../services/check/checkCategory'
 
 export default {
   namespace: 'checkCategory',

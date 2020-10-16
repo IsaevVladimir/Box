@@ -10,7 +10,7 @@ function Index({location}) {
 
   return (
     <Main location={location}>
-      <LinearChart dataSource={mockData}/>
+      <LinearChart dataSource={mockData} />
     </Main>
   );
 }

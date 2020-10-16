@@ -21,7 +21,7 @@ namespace WebApp.Host.Services.TableService.Implementations
         {
             var allRows = await _tableRowRepository.GetAll();
             return allRows
-                .Select(cellDm => ServiceMapper.Mapper.Map<RowDto>(cellDm))
+                .Select(ConvertToDto)
                 .ToList();
         }
         public async Task<RowDto> GetRow(int userId, int rowId)
@@ -30,29 +30,52 @@ namespace WebApp.Host.Services.TableService.Implementations
             if (rowDm is null)
                 return null;
 
-            return ServiceMapper.Mapper.Map<RowDto>(rowDm);
+            return ConvertToDto(rowDm);
         }
         public async Task<RowDto> AddRow(int userId, RowDto row)
         {
-            var dataModel = ServiceMapper.Mapper.Map<TableRowDm>(row);;
+            var dataModel = ConvertToDm(row);;
             var addedDataModel = await _tableRowRepository.Add(dataModel);
             if (addedDataModel is null)
                 return null;
 
-            return ServiceMapper.Mapper.Map<RowDto>(addedDataModel);
+            return ConvertToDto(addedDataModel);
         }
         public async Task<RowDto> UpdateRow(int userId, RowDto row)
         {
-            var dataModel = ServiceMapper.Mapper.Map<TableRowDm>(row);;
+            var dataModel = ConvertToDm(row);;
             var updatedDataModel = await _tableRowRepository.Update(dataModel);
             if (updatedDataModel is null)
                 return null;
 
-            return ServiceMapper.Mapper.Map<RowDto>(updatedDataModel);
+            return ConvertToDto(updatedDataModel);
         }
         public async Task<bool> RemoveRow(int userId, int id)
         {
             return await _tableRowRepository.Delete(id);
+        }
+        
+        public async Task<List<RowDto>> UpdateRows(int userId, List<RowDto> rows)
+        {
+            var dataModels = rows.Select(ConvertToDm);
+                
+            var updatedDataModels = new List<TableRowDm>();
+            foreach (var row in dataModels)
+            {
+                updatedDataModels.Add(await _tableRowRepository.Update(row));
+            }
+
+            return updatedDataModels.Select(ConvertToDto).ToList();
+        }
+
+        
+        private RowDto ConvertToDto(TableRowDm rowDm)
+        {
+            return ServiceMapper.Mapper.Map<RowDto>(rowDm);
+        }
+        private TableRowDm ConvertToDm(RowDto rowDm)
+        {
+            return ServiceMapper.Mapper.Map<TableRowDm>(rowDm);
         }
     }
 }

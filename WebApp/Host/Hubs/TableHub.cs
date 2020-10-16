@@ -36,13 +36,23 @@ namespace WebApp.Host.Hubs
         }
         public async Task<bool> RemoveRow(int id)
         {
-            var removeSuccess = await _tableService.RemoveCell(1, id);
+            var removeSuccess = await _tableService.RemoveRow(1, id);
             if (!removeSuccess)
                 return false;
             Clients.Others.SendAsync("RemoveCell", id);
             return true;
         }
+        
+        public async Task<List<RowDto>> UpdateRows(List<RowDto> rows)
+        {
+            var updatedRows = await _tableService.UpdateRows(1, rows);
+            if (updatedRows is null)
+                return null;
+            Clients.Others.SendAsync("UpdateRows", updatedRows);
+            return rows;
+        }
 
+        
         public async Task<List<CellDto>> GetCellList(int rowId = 0)
         {
             return await _tableService.GetCellList(1, rowId);

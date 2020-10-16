@@ -44,10 +44,11 @@ export default ({title, editable, children, dataIndex, record, handleSave, ...re
 
   const cellValue = get(record, dataIndex);
   if (editable) {
-    childNode = editing ? (
-      <NormalizeForm>
+    // todo: решить, всегда ли требуется форма
+    childNode = true ? (
+      <NormalizeForm className={styles.cellForm}>
         <NormalizeFormItem fieldName={dataIndex} initialValue={cellValue}>
-          <Input style={{ width: '50px' }} className={styles.cellInput} ref={inputRef} onPressEnter={save} onBlur={save}/>
+          <Input className={styles.cellInput} ref={inputRef} onPressEnter={save} onBlur={save}/>
         </NormalizeFormItem>
       </NormalizeForm>
     ) : (
@@ -57,5 +58,5 @@ export default ({title, editable, children, dataIndex, record, handleSave, ...re
     );
   }
 
-  return <td {...restProps} style={{ padding: 0 }}>{childNode}</td>;
+  return <td {...restProps} style={{ padding: 0, height: '32px' }}>{childNode}</td>;
 };

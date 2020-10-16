@@ -10,8 +10,33 @@
   cursor: pointer;
 }
 
+td:focus {
+  border-color: aquamarine;
+}
+
+.cellForm {
+  :global(.ant-form-item-control) {
+    line-height: normal;
+  }
+}
+
 .cellInput {
   position: relative;
+  width: 100%;
   border-radius: 0;
+  border: 0;
   padding: 0;
+  background-color: transparent;
+}
+
+:global(.ant-input:hover) {
+  border: 0 transparent;
+  box-shadow: transparent;
+  background-color: #fff;
+}
+
+:global(.ant-input:focus) {
+  border: 0;
+  box-shadow: none;
+  background-color: #fff;
 }

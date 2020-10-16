@@ -8,9 +8,9 @@ import EditableCell from './components/EditableCell'
 
 import { normalizeDataProps } from './utils'
 
-const MultiplayerTable = ({ rows, cells, updateRow, updateCell }) => {
+const MultiplayerTable = ({ rows, cells, updateCell }) => {
   const { columns, ...dataProps } = useMemo(() => {
-    return normalizeDataProps(rows, cells, updateRow, updateCell);
+    return normalizeDataProps(rows, cells, updateCell);
   }, [rows, cells]);
 
   const cols = columns.map(col => {
@@ -38,23 +38,15 @@ const MultiplayerTable = ({ rows, cells, updateRow, updateCell }) => {
   );
 };
 
-export default connect(({ table }) => ({
-  rows: table.rows,
-  cells: table.cells
+export default connect(({ row, cell }) => ({
+  rows: row.list,
+  cells: cell.list
 }), dispatch => ({
-  updateRow: row => {
-    if (has(row, 'id') && isNumber(row.id)) {
-      dispatch({type: 'table/updateRow', payload: row})
-    } else {
-      dispatch({type: 'table/addRow', payload: row})
-    }
-  },
   updateCell: cell => {
-    console.log('cell', cell);
     if (has(cell, 'id') && isNumber(cell.id)) {
-      dispatch({type: 'table/updateCell', payload: cell})
+      dispatch({type: 'cell/updateCell', payload: cell})
     } else {
-      dispatch({type: 'table/addCell', payload: cell})
+      dispatch({type: 'cell/addCell', payload: cell})
     }
   },
 }))(MultiplayerTable);

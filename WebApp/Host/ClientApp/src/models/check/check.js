@@ -4,7 +4,7 @@ import get from 'lodash/get'
 import eq from 'lodash/eq'
 import map from 'lodash/map'
 import filter from 'lodash/filter'
-import { fetch, add, update, remove } from '../services/check'
+import { fetch, add, update, remove } from '../../services/check/check'
 
 export default {
   namespace: 'check',
